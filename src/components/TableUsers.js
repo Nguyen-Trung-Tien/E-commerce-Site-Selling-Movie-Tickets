@@ -6,9 +6,10 @@ import { toast } from 'react-toastify';
 import ModalAddNew from './ModalAddNew';
 import ModalEditUsers from './ModalEditUsers';
 import ModalConfirm from './ModalConfirm';
+import { debounce } from 'lodash';
 import './TableUsser.scss';
 
-import _ from 'lodash';
+import _, { get } from 'lodash';
 const TableUsers = (porps) => {
     const [ListUsers, setListUsers] = useState([]);
     const [totalUsers, setTotalUsers] = useState(0);
@@ -24,6 +25,8 @@ const TableUsers = (porps) => {
 
     const [sortBy, setSortBy] = useState("asc");
     const [sortField, setSortField] = useState("id");
+
+    const [keyword, setKeyword] = useState("");
 
     const handleClose = () => {
         setIsShowModalAddNew(false);
@@ -51,6 +54,17 @@ const TableUsers = (porps) => {
         cloneListUsers = _.orderBy(cloneListUsers, [sortField], [sortBy]);
         setListUsers(cloneListUsers);
     }
+
+    const handleSearch = debounce((event) => {
+        let term = event.target.value;
+        if (term) {
+            let cloneListUsers = _.cloneDeep(ListUsers);
+            cloneListUsers = cloneListUsers.filter(item => item.email.includes(term));
+            setListUsers(cloneListUsers);
+        } else {
+            getUsers(1);
+        }
+    }, 300);
 
     useEffect(() => {
         // call api
@@ -99,6 +113,15 @@ const TableUsers = (porps) => {
             <button className="btn btn-success"
                 onClick={() => setIsShowModalAddNew(true)}
             >Add user</button>
+        </div>
+        <div className='col-4 my-3'>
+            <input
+                className="form-control"
+                placeholder='Search user by email'
+                // value={keyword}
+                onChange={(event) => handleSearch(event)}
+            />
+
         </div>
         <Table striped bordered hover>
             <thead>
