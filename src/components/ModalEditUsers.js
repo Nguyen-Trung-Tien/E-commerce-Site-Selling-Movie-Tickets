@@ -6,16 +6,16 @@ import { useEffect } from 'react';
 
 const ModalEditUsers = (props) => {
     const { show, handleClose, dataUserEdit, handleEditUsersFromModal } = props;
-    const [name, setName] = useState(dataUserEdit.first_name || "");
-    const [job, setJob] = useState(dataUserEdit.job || "");
+    const [name, setName] = useState(dataUserEdit.first_name);
+    const [job, setJob] = useState(dataUserEdit.job);
     const handleEditUsers = async () => {
         let res = await putUpdateUser(dataUserEdit.id, name, job);
         if (res && res.updatedAt) {
             // success
             handleEditUsersFromModal({
-                first_name: name,
+                id: dataUserEdit.id,
                 job: job,
-                id: dataUserEdit.id
+                first_name: name,
             });
             toast.success("Edit user success!");
             handleClose();
@@ -24,8 +24,8 @@ const ModalEditUsers = (props) => {
 
     useEffect(() => {
         if (show) {
-            setName(dataUserEdit.first_name || "");
-            setJob(dataUserEdit.job || "");
+            setName(dataUserEdit.first_name);
+            setJob(dataUserEdit.job);
         }
     }, [dataUserEdit, show]);
 
