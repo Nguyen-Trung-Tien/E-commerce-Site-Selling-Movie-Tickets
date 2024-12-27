@@ -5,6 +5,8 @@ import Container from 'react-bootstrap/Container';
 import { ToastContainer } from 'react-toastify';
 import { Bounce } from 'react-toastify';
 import Home from './components/Home';
+import Login from './components/login';
+import Register from './components/register';
 import { Route, Routes, Link } from 'react-router-dom';
 
 function App() {
@@ -19,6 +21,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/users" element={<TableUsers />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
           </Routes>
         </Container>
       </div >

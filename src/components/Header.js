@@ -24,12 +24,17 @@ const Header = (porps) => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto" >
                         <NavLink to="/" className="nav-link">Home</NavLink>
-                        <NavLink to="/users" className="nav-link"   > Manage Users</NavLink>
-                        <NavDropdown title="Settings    " id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Login</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Logout</NavDropdown.Item>
+                        <NavLink to="/users" className="nav-link" > Manage Users</NavLink>
+
+                    </Nav>
+                    <Nav>
+                        <NavDropdown title="Settings" >
+                            <NavDropdown.Item href="Login">Login</NavDropdown.Item>
+                            <NavDropdown.Item href="Logout">Logout</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
+
+
                 </Navbar.Collapse>
             </Container>
         </Navbar >
