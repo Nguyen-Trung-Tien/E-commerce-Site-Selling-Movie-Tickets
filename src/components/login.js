@@ -31,7 +31,8 @@ const Login = () => {
         setLoadingDataAPI(true);
         let res = await loginApi(email, password);
         if (res && res.token) {
-            loginContext(email, res.token);
+            localStorage.setItem("token", res.token);
+            loginContext(email);
             navigate("/");
         } else {
             if (res && res.status === 400) {

@@ -11,6 +11,8 @@ const Home = () => {
     const [discountCode, setDiscountCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState('credit-card');
+    const [selectedTime, setSelectedTime] = useState('');
+    const [selectedShow, setSelectedShow] = useState('');
 
     const movies = [
         { id: 1, title: 'Movie 1', description: 'Description 1', genre: 'Action', image: 'path/to/image1.jpg' },
@@ -27,6 +29,8 @@ const Home = () => {
 
     const genres = ['All', 'Action', 'Comedy', 'Drama', 'Horror'];
     const showtimes = ['10:00 AM', '1:00 PM', '4:00 PM', '7:00 PM', '10:00 PM'];
+    const times = ['Morning', 'Afternoon', 'Evening'];
+    const shows = ['Show 1', 'Show 2', 'Show 3'];
 
     const filteredMovies = movies.filter(movie =>
         (selectedGenre === 'All' || movie.genre === selectedGenre) &&
@@ -40,7 +44,7 @@ const Home = () => {
     const handlePurchase = () => {
         const totalPrice = tickets * 10; // Assume each ticket costs $10
         const finalPrice = totalPrice - (totalPrice * discount / 100);
-        alert(`You have purchased ${tickets} tickets for ${selectedMovie.title} on ${selectedDate} at ${selectedShowtime} for $${finalPrice.toFixed(2)} using ${paymentMethod}`);
+        alert(`You have purchased ${tickets} tickets for ${selectedMovie.title} on ${selectedDate} at ${selectedShowtime} (${selectedTime} - ${selectedShow}) for $${finalPrice.toFixed(2)} using ${paymentMethod}`);
         setSelectedMovie(null);
         setTickets(1);
         setSelectedDate('');
@@ -76,6 +80,18 @@ const Home = () => {
                             <option key={genre} value={genre}>{genre}</option>
                         ))}
                     </select>
+                    <select value={selectedTime} onChange={(event) => setSelectedTime(event.target.value)}>
+                        <option value=''>Select Time</option>
+                        {times.map(time => (
+                            <option key={time} value={time}>{time}</option>
+                        ))}
+                    </select>
+                    <select value={selectedShow} onChange={(event) => setSelectedShow(event.target.value)}>
+                        <option value=''>Select Show</option>
+                        {shows.map(show => (
+                            <option key={show} value={show}>{show}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className='movie-listings'>
                     {filteredMovies.map(movie => (
@@ -104,6 +120,24 @@ const Home = () => {
                                 <option value=''>Select Showtime</option>
                                 {showtimes.map(time => (
                                     <option key={time} value={time}>{time}</option>
+                                ))}
+                            </select>
+                        </label>
+                        <label>
+                            Time:
+                            <select value={selectedTime} onChange={(event) => setSelectedTime(event.target.value)}>
+                                <option value=''>Select Time</option>
+                                {times.map(time => (
+                                    <option key={time} value={time}>{time}</option>
+                                ))}
+                            </select>
+                        </label>
+                        <label>
+                            Show:
+                            <select value={selectedShow} onChange={(event) => setSelectedShow(event.target.value)}>
+                                <option value=''>Select Show</option>
+                                {shows.map(show => (
+                                    <option key={show} value={show}>{show}</option>
                                 ))}
                             </select>
                         </label>
