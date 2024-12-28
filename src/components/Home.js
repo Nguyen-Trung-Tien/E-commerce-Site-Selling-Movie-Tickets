@@ -13,7 +13,7 @@ const Home = () => {
     const [paymentMethod, setPaymentMethod] = useState('credit-card');
 
     const movies = [
-        { id: 1, title: 'Movie 1', description: 'Description 1', genre: 'Action', image: './assets/image/logo192.png' },
+        { id: 1, title: 'Movie 1', description: 'Description 1', genre: 'Action', image: 'path/to/image1.jpg' },
         { id: 2, title: 'Movie 2', description: 'Description 2', genre: 'Comedy', image: 'path/to/image2.jpg' },
         { id: 3, title: 'Movie 3', description: 'Description 3', genre: 'Drama', image: 'path/to/image3.jpg' },
         { id: 4, title: 'Movie 4', description: 'Description 4', genre: 'Horror', image: 'path/to/image4.jpg' },
@@ -53,6 +53,8 @@ const Home = () => {
     const applyDiscount = () => {
         if (discountCode === 'SALE20') {
             setDiscount(20);
+        } else if (discountCode === 'SALE50') {
+            setDiscount(50);
         } else {
             alert('Invalid discount code');
         }
@@ -132,7 +134,7 @@ const Home = () => {
                                 <option value='credit-card'>Credit Card</option>
                                 <option value='paypal'>PayPal</option>
                                 <option value='bank-transfer'>Bank Transfer</option>
-
+                                <option value='cash'>Cash</option> {/* Added new payment method */}
                             </select>
                         </label>
                         <button onClick={handlePurchase}>Purchase</button>

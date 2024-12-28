@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { loginApi } from '../service/userService';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 const Login = () => {
 
     const navigate = useNavigate();
+
+    const { loginContext } = useContext(UserContext);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isShowPassword, setIsShowPassword] = useState(false);
@@ -15,6 +19,7 @@ const Login = () => {
     useEffect(() => {
         let token = localStorage.getItem("token");
         if (token) {
+            loginContext(email);
             navigate("/");
         }
     }, [])
@@ -26,7 +31,7 @@ const Login = () => {
         setLoadingDataAPI(true);
         let res = await loginApi(email, password);
         if (res && res.token) {
-            localStorage.setItem("token", res.token);
+            loginContext(email, res.token);
             navigate("/");
         } else {
             if (res && res.status === 400) {
@@ -36,10 +41,14 @@ const Login = () => {
         setLoadingDataAPI(false);
     }
 
+
+    const handleGoBack = () => {
+        navigate("/");
+    }
     return (
         <div className="login-container col-12 col-sm-4" >
             <div className="title">Login</div>
-            <div className="text"> Email or Usersname</div>
+            <div className="text"> Email or Usersname  (eve.holt@reqres.in) </div>
             <input
 
                 type="text"
@@ -68,7 +77,8 @@ const Login = () => {
                 &nbsp;Login
             </button>
             <div className="back">
-                <i className="fa-solid fa-chevron-left"></i>Go back
+                <i className="fa-solid fa-chevron-left"></i>
+                <span onClick={() => handleGoBack("/")}> &nbsp; Go back</span>
             </div>
         </div >
     );

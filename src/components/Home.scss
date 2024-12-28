@@ -14,7 +14,7 @@
 
 .sidebar {
     background-color: #f4f4f4;
-    padding: 20 px;
+    padding: 20px;
     margin: 0 20px;
     display: flex;
     border-radius: 8px;
@@ -63,6 +63,12 @@
     padding: 5px;
     width: 270px;
     text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s; // Added transition for hover effect
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .movie-card img {
