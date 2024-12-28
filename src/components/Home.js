@@ -13,7 +13,7 @@ const Home = () => {
     const [paymentMethod, setPaymentMethod] = useState('credit-card');
 
     const movies = [
-        { id: 1, title: 'Movie 1', description: 'Description 1', genre: 'Action', image: 'path/to/image1.jpg' },
+        { id: 1, title: 'Movie 1', description: 'Description 1', genre: 'Action', image: './assets/image/logo192.png' },
         { id: 2, title: 'Movie 2', description: 'Description 2', genre: 'Comedy', image: 'path/to/image2.jpg' },
         { id: 3, title: 'Movie 3', description: 'Description 3', genre: 'Drama', image: 'path/to/image3.jpg' },
         { id: 4, title: 'Movie 4', description: 'Description 4', genre: 'Horror', image: 'path/to/image4.jpg' },
