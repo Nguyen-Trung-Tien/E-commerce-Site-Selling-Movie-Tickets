@@ -3,9 +3,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import logoApp from '../assets/image/logo192.png';
-import { useLocation, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { handleLogoutRedux } from '../redux/actions/userAction';
 
@@ -22,9 +22,9 @@ const Header = (porps) => {
     }
 
     useEffect(() => {
-        if (user && !user.auth === false) {
+        if (user && !user.auth === false && window.location.pathname !== '/login') {
             navigate("/");
-            toast.success("Logout success!");
+            toast.success("Log out success!");
         }
     }, [user]);
 

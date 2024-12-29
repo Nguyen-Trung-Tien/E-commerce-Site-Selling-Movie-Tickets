@@ -82,7 +82,7 @@ const Login = () => {
                     disabled={email && password ? false : true}
                     onClick={() => handleLogin()}
                 >
-                    {isLoading === true ? <i className="fa-solid fa-sync fa-spin"></i> : ""}
+                    {isLoading && isLoading === true && <i className="fa-solid fa-sync fa-spin"></i>}
                     &nbsp;Login
                 </button>
                 <div className="back">
@@ -95,4 +95,4 @@ const Login = () => {
     );
 }
 
-export default Login
+export default Login;

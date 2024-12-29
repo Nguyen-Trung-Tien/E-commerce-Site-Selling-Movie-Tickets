@@ -8,6 +8,7 @@ export const FETCH_USER_SUCCESS = "FETCH_USER_SUCCESS";
 
 
 export const USER_LOGOUT = "USER_LOGOUT";
+export const USER_REFRESH = "USER_REFRESH";
 
 export const handleLoginRedux = (email, password) => {
     return async (dispatch, getState) => {
@@ -39,6 +40,14 @@ export const handleLogoutRedux = () => {
         dispatch({
             type: USER_LOGOUT,
 
+        })
+    }
+}
+
+export const handleRefresh = () => {
+    return (dispatch, getState) => {
+        dispatch({
+            type: USER_REFRESH,
         })
     }
 }
