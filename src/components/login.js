@@ -1,14 +1,12 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { loginApi } from '../service/userService';
+import { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
-
+import { handleLoginRedux } from '../redux/actions/userAction';
+import { useDispatch } from 'react-redux';
 const Login = () => {
 
     const navigate = useNavigate();
-
-    const { loginContext } = useContext(UserContext);
+    const dispatch = useDispatch();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,7 +18,7 @@ const Login = () => {
     useEffect(() => {
         let token = localStorage.getItem("token");
         if (token) {
-            loginContext(email);
+            // loginContext(email);
             navigate("/");
         }
     }, [])
@@ -37,17 +35,21 @@ const Login = () => {
             return;
         }
         setLoadingDataAPI(true);
-        let res = await loginApi(email.trim(), password);
-        if (res && res.token) {
-            localStorage.setItem("token", res.token);
-            loginContext(email);
-            navigate("/");
-        } else {
-            if (res && res.status === 400) {
-                toast.error(res.data.error);
-            }
-        }
+
+        // let res = await loginApi(email.trim(), password);
+        // if (res && res.token) {
+        //     localStorage.setItem("token", res.token);
+        //     loginContext(email);
+        //     navigate("/");
+        // } else {
+        //     if (res && res.status === 400) {
+        //         toast.error(res.data.error);
+        //     }
+        // }
+
         setLoadingDataAPI(false);
+
+        dispatch(handleLoginRedux(email, password));
     }
 
 
