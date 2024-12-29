@@ -6,7 +6,7 @@ import logoApp from '../assets/image/logo192.png';
 import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { handleLogoutRedux } from '../redux/actions/userAction';
 
 const Header = (porps) => {
@@ -14,8 +14,10 @@ const Header = (porps) => {
     const navigate = useNavigate();
 
     const user = useSelector(state => state.user.account);
+
+    const dispatch = useDispatch();
     const handleLogout = () => {
-        handleLogoutRedux();
+        dispatch(handleLogoutRedux());
 
     }
 
