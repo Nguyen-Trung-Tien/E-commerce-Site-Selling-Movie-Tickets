@@ -72,7 +72,7 @@ const Login = () => {
                         onChange={(event) => setPassword(event.target.value)}
                         onKeyDown={(event) => handlePressEnter(event)}
                     />
-                    <i className={isShowPassword === true ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}
+                    <i className={isShowPassword === true ? "fas fa-eye" : "fas fa-eye-slash"}
                         onClick={() => setIsShowPassword(!isShowPassword)}
                     ></i>
                 </div>
@@ -82,11 +82,11 @@ const Login = () => {
                     disabled={email && password ? false : true}
                     onClick={() => handleLogin()}
                 >
-                    {isLoading && isLoading === true && <i className="fa-solid fa-sync fa-spin"></i>}
+                    {isLoading && isLoading === true && <i className="fas fa-sync fa-spin"></i>}
                     &nbsp;Login
                 </button>
                 <div className="back">
-                    <i className="fa-solid fa-chevron-left"></i>
+                    <i className="fas fa-chevron-left"></i>
                     <span onClick={() => handleGoBack("/")}> &nbsp; Go back</span>
                 </div>
             </div >
