@@ -1,5 +1,5 @@
 import { isError } from "lodash";
-import { FETCH_USER_LOGIN, FETCH_USER_ERROR, FETCH_USER_SUCCESS } from "../actions/userAction";
+import { FETCH_USER_LOGIN, FETCH_USER_ERROR, FETCH_USER_SUCCESS, USER_LOGOUT } from "../actions/userAction";
 const INITIAL_STATE = {
 
     account: {
@@ -48,10 +48,19 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 },
                 isLoading: false,
                 isError: false,
-
-
             };
 
+        case USER_LOGOUT:
+            localStorage.removeItem("email");
+            localStorage.removeItem("token");
+            return {
+                ...state,
+                account: {
+                    email: '',
+                    token: '',
+                    auth: false,
+                },
+            }
 
         default: return state;
 

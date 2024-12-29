@@ -7,7 +7,7 @@ import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-
+import { handleLogoutRedux } from '../redux/actions/userAction';
 
 const Header = (porps) => {
 
@@ -15,10 +15,16 @@ const Header = (porps) => {
 
     const user = useSelector(state => state.user.account);
     const handleLogout = () => {
-        // logout();
-        // navigate("/");
-        // toast.success("Logout success!");
+        handleLogoutRedux();
+
     }
+
+    useEffect(() => {
+        if (user && !user.auth === false) {
+            navigate("/");
+            toast.success("Logout success!");
+        }
+    }, [user]);
 
     return (<>
         <Navbar expand="lg" className="bg-body-tertiary" >
