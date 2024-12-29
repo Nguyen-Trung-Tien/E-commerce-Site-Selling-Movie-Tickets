@@ -35,18 +35,6 @@ const Login = () => {
             return;
         }
         setLoadingDataAPI(true);
-
-        // let res = await loginApi(email.trim(), password);
-        // if (res && res.token) {
-        //     localStorage.setItem("token", res.token);
-        //     loginContext(email);
-        //     navigate("/");
-        // } else {
-        //     if (res && res.status === 400) {
-        //         toast.error(res.data.error);
-        //     }
-        // }
-
         setLoadingDataAPI(false);
 
         dispatch(handleLoginRedux(email, password));

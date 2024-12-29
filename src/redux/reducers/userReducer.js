@@ -1,3 +1,4 @@
+import { isError } from "lodash";
 import { FETCH_USER_LOGIN, FETCH_USER_ERROR, FETCH_USER_SUCCESS } from "../actions/userAction";
 const INITIAL_STATE = {
 
@@ -6,6 +7,9 @@ const INITIAL_STATE = {
         auth: false,
         token: ''
     },
+
+    isLoading: false,
+    isError: false,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -16,7 +20,10 @@ const userReducer = (state = INITIAL_STATE, action) => {
 
             return {
 
-                ...state, count: state.count + 1,
+                ...state,
+                isLoading: true,
+                isError: false,
+
 
             };
 
@@ -24,16 +31,24 @@ const userReducer = (state = INITIAL_STATE, action) => {
 
             return {
                 ...state,
-                auth: false,
-
+                account: {
+                    auth: false,
+                },
+                isLoading: false,
+                isError: true,
             };
 
         case FETCH_USER_SUCCESS:
             return {
                 ...state,
-                email: action.data.email,
-                token: action.data.token,
-                auth: true,
+                account: {
+                    email: action.data.email,
+                    token: action.data.token,
+                    auth: true,
+                },
+                isLoading: false,
+                isError: false,
+
 
             };
 
