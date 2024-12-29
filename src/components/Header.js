@@ -5,30 +5,19 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import logoApp from '../assets/image/logo192.png';
 import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { use } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
 
 const Header = (porps) => {
 
-    const { logout, user } = useContext(UserContext);
-
-    const location = useLocation();
-
-    const [hideHeader, setHideHeader] = useState(false);
-
-    // useEffect(() => {
-    //     if (window.location.pathname === '/login') {
-    //         setHideHeader(true);
-    //     }
-    // }, [])
     const navigate = useNavigate();
+
+    const user = useSelector(state => state.user.account);
     const handleLogout = () => {
-        logout();
-        navigate("/");
-        toast.success("Logout success!");
+        // logout();
+        // navigate("/");
+        // toast.success("Logout success!");
     }
 
     return (<>
@@ -54,7 +43,7 @@ const Header = (porps) => {
 
                             </Nav>
                             <Nav>
-                                <NavLink to="/register" className="nav-link" > Register</NavLink>
+                                {!user && <NavLink to="/register" className="nav-link" > Register</NavLink>}
                                 {user && user.email && < span className="nav-link"  > Wellcome {user.email}</span>}
                                 <NavDropdown title="Settings" >
                                     {user && user.auth === true
