@@ -173,9 +173,9 @@ const TableUsers = (porps) => {
     };
 
     return (<>
-        <div className='my-3 add-new'>
+        <div className='my-3 add-new d-sm-flex'>
             <span><b>List users:</b></span>
-            <div className='group-btn'>
+            <div className='group-btn' mt-sm-2 mt-2>
                 <label htmlFor='test' className="btn btn-warning">
                     <i className="fa-solid fa-file-import"></i> Import
                 </label>
@@ -198,7 +198,7 @@ const TableUsers = (porps) => {
             </div>
 
         </div >
-        <div className='col-4 my-3'>
+        <div className='col-12 col-sm-4 my-3'>
             <input
                 className="form-control"
                 placeholder='Search user by email'
@@ -207,88 +207,92 @@ const TableUsers = (porps) => {
             />
 
         </div>
-        <Table striped bordered hover>
-            <thead>
-                <tr>
-                    <th>
-                        <div className='sort-header'>
-                            <span>ID</span>
-                            <span>
-                                <i
-                                    className="fa-solid fa-arrow-down-long"
-                                    onClick={() => handleSort("desc", "id")}
 
-                                ></i>
-                                <i className="fa-solid fa-arrow-up-long"
-                                    onClick={() => handleSort("asc", "id")}
-                                ></i>
-                            </span>
-                        </div>
-                    </th>
+        <div className='customize-table'>
+            <Table striped bordered hover className='customize-table'>
+                <thead>
+                    <tr>
+                        <th>
+                            <div className='sort-header'>
+                                <span>ID</span>
+                                <span>
+                                    <i
+                                        className="fa-solid fa-arrow-down-long"
+                                        onClick={() => handleSort("desc", "id")}
+
+                                    ></i>
+                                    <i className="fa-solid fa-arrow-up-long"
+                                        onClick={() => handleSort("asc", "id")}
+                                    ></i>
+                                </span>
+                            </div>
+                        </th>
 
 
-                    <th >
-                        <div className='sort-header'>
-                            <span>First Name</span>
-                            <span>
-                                <i
-                                    className="fa-solid fa-arrow-down-long"
-                                    onClick={() => handleSort("desc", "first_name")}
+                        <th >
+                            <div className='sort-header'>
+                                <span>First Name</span>
+                                <span>
+                                    <i
+                                        className="fa-solid fa-arrow-down-long"
+                                        onClick={() => handleSort("desc", "first_name")}
 
-                                ></i>
-                                <i className="fa-solid fa-arrow-up-long"
-                                    onClick={() => handleSort("asc", "first_name")}
-                                ></i>
-                            </span>
-                        </div>
-                    </th>
-                    <th>
-                        <div className='sort-header'>
-                            <span>Last Name</span>
-                        </div>
-                    </th>
-                    <th >
-                        <div className='sort-header'>
-                            <span>Email</span>
-                            <span><i className="fa-solid fa-envelope"></i>
-                            </span>
-                        </div>
-                    </th>
-                    <th >
-                        <div className='sort-header'>
-                            <span>Actions</span>
+                                    ></i>
+                                    <i className="fa-solid fa-arrow-up-long"
+                                        onClick={() => handleSort("asc", "first_name")}
+                                    ></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th>
+                            <div className='sort-header'>
+                                <span>Last Name</span>
+                            </div>
+                        </th>
+                        <th >
+                            <div className='sort-header'>
+                                <span>Email</span>
+                                <span><i className="fa-solid fa-envelope"></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th >
+                            <div className='sort-header'>
+                                <span>Actions</span>
 
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {ListUsers.map((item, index) => {
-                    return (
-                        <tr key={`user-${index}`}>
-                            <td>{item.id}</td>
-                            <td>{item.first_name}</td>
-                            <td>{item.last_name}</td>
-                            <td>{item.email}</td>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {ListUsers.map((item, index) => {
+                        return (
+                            <tr key={`user-${index}`}>
+                                <td>{item.id}</td>
+                                <td>{item.first_name}</td>
+                                <td>{item.last_name}</td>
+                                <td>{item.email}</td>
 
-                            <td>
-                                <button
-                                    className='btn btn-warning mx-3'
-                                    onClick={() => handleEditUsers(item)}
-                                >Edit</button>
-                                <button
-                                    onClick={() => handleDeleteUser(item)}
-                                    className='btn btn-danger mx-3'>
-                                    Delete
-                                </button>
-                            </td>
+                                <td>
+                                    <button
+                                        className='btn btn-warning mx-3'
+                                        onClick={() => handleEditUsers(item)}
+                                    >Edit</button>
+                                    <button
+                                        onClick={() => handleDeleteUser(item)}
+                                        className='btn btn-danger mx-3'>
+                                        Delete
+                                    </button>
+                                </td>
 
-                        </tr>
-                    )
-                })}
-            </tbody>
+                            </tr>
+                        )
+                    })}
+                </tbody>
 
-        </Table>
+            </Table>
+        </div>
+
         <ReactPaginate
             breakLabel="..."
             nextLabel="next >"

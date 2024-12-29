@@ -1,18 +1,15 @@
 import './App.scss';
 import Header from './components/Header';
-import TableUsers from './components/TableUsers';
 import Container from 'react-bootstrap/Container';
 import { ToastContainer } from 'react-toastify';
 import { Bounce } from 'react-toastify';
-import Home from './components/Home';
-import Login from './components/login';
-import Register from './components/register';
-import { Route, Routes, Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { UserContext } from './context/UserContext';
-import { useEffect } from 'react';
+import AppRoutes from './routes/AppRoutes';
+import { useSelector } from 'react-redux';
 function App() {
 
+  const dataUserRedux = useSelector(state => state.user.account);
   const { user, loginContext } = useContext(UserContext);
 
   useEffect(() => {
@@ -20,21 +17,13 @@ function App() {
       loginContext(localStorage.getItem("email"), localStorage.getItem("token"));
     }
   }, [])
-  return (
 
+  return (
     <>
       <div className='app-container'>
-
-
         <Header />
         <Container>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/users" element={<TableUsers />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-
-          </Routes>
+          <AppRoutes />
         </Container>
       </div >
 

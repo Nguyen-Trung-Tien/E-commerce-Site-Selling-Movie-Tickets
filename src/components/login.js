@@ -16,6 +16,7 @@ const Login = () => {
 
     const [loadingDataAPI, setLoadingDataAPI] = useState(false);
 
+
     useEffect(() => {
         let token = localStorage.getItem("token");
         if (token) {
@@ -23,13 +24,20 @@ const Login = () => {
             navigate("/");
         }
     }, [])
+
+    const handlePressEnter = (event) => {
+        if (event && event.key === 'Enter') {
+            handleLogin();
+        }
+    }
+
     const handleLogin = async () => {
         if (!email || !password) {
             toast.error("Invalid email or password!");
             return;
         }
         setLoadingDataAPI(true);
-        let res = await loginApi(email, password);
+        let res = await loginApi(email.trim(), password);
         if (res && res.token) {
             localStorage.setItem("token", res.token);
             loginContext(email);
@@ -63,6 +71,7 @@ const Login = () => {
                     placeholder="Password..."
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
+                    onKeyDown={(event) => handlePressEnter(event)}
                 />
                 <i className={isShowPassword === true ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}
                     onClick={() => setIsShowPassword(!isShowPassword)}

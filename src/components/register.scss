@@ -1,0 +1,118 @@
+.Register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .text {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .input-2 {
+        position: relative;
+        width: 100%;
+
+        input {
+            width: calc(100%);
+            padding-right: 30px;
+        }
+
+        i {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    }
+
+    .input-3 {
+        position: relative;
+        width: 100%;
+
+        input {
+            width: calc(100%);
+            padding-right: 30px;
+        }
+
+        i {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &.active {
+            background-color: #0056b3;
+        }
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        i {
+            margin-right: 5px;
+        }
+    }
+
+    .back {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #007bff;
+        cursor: pointer;
+
+        i {
+            margin-right: 5px;
+        }
+    }
+
+    form {
+        width: 100%;
+        max-width: 400px;
+
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    }
+}
