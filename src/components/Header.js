@@ -51,7 +51,7 @@ const Header = (porps) => {
 
                             </Nav>
                             <Nav>
-                                {!user && <NavLink to="/register" className="nav-link" > Register</NavLink>}
+                                {user && !user.email && !user.auth && <NavLink to="/register" className="nav-link" > Register</NavLink>}
                                 {user && user.email && < span className="nav-link"  > Wellcome {user.email}</span>}
                                 <NavDropdown title="Settings" >
                                     {user && user.auth === true
