@@ -29,7 +29,30 @@ const Home = () => {
       genre: "Comedy",
       description: "Description for Movie 2",
     },
-    // Add more movies
+    {
+      id: 2,
+      title: "Movie 2",
+      genre: "Comedy",
+      description: "Description for Movie 2",
+    },
+    {
+      id: 2,
+      title: "Movie 2",
+      genre: "Comedy",
+      description: "Description for Movie 2",
+    },
+    {
+      id: 2,
+      title: "Movie 2",
+      genre: "Comedy",
+      description: "Description for Movie 2",
+    },
+    {
+      id: 2,
+      title: "Movie 2",
+      genre: "Comedy",
+      description: "Description for Movie 2",
+    },
   ];
 
   const genres = ["All", "Action", "Comedy", "Drama", "Horror"];
