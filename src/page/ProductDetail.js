@@ -20,7 +20,7 @@ const ProductDetail = () => {
       genre: "Action, Adventure",
       image: "movie-poster.jpg",
       showtimes: ["10:00 AM", "1:00 PM", "4:00 PM", "7:00 PM", "10:00 PM"],
-      price: 10, // Assume each ticket costs $10
+      price: 10, 
     };
     setMovie(fetchedMovie);
   }, [movieId]);

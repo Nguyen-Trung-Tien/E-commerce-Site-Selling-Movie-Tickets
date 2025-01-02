@@ -5,6 +5,7 @@ import ProductDetail from "../page/ProductDetail";
 import TableUsers from "../components/TableUsers";
 import Register from "../page/register";
 import PrivateRoute from "./PrivatRoute";
+import About from "../page/about";
 import NotFound from "./NotFound";
 const AppRoutes = () => {
   return (
@@ -13,6 +14,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<About />} />
         <Route path="/ProductDetail" element={<ProductDetail />} />
 
         <Route

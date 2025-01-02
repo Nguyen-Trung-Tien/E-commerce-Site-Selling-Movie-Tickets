@@ -65,6 +65,10 @@ const Header = (props) => {
                     {" "}
                     Product Detail
                   </NavLink>
+                  <NavLink to="/about" className="nav-link">
+                    {" "}
+                    About
+                  </NavLink>
                 </Nav>
                 <Nav>
                   {user && !user.email && !user.auth && (

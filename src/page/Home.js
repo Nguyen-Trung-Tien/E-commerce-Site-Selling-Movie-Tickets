@@ -15,6 +15,7 @@ const Home = () => {
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedShow, setSelectedShow] = useState("");
+  const [sortOption, setSortOption] = useState("title");
 
   const movies = [
     {
@@ -29,30 +30,7 @@ const Home = () => {
       genre: "Comedy",
       description: "Description for Movie 2",
     },
-    {
-      id: 2,
-      title: "Movie 2",
-      genre: "Comedy",
-      description: "Description for Movie 2",
-    },
-    {
-      id: 2,
-      title: "Movie 2",
-      genre: "Comedy",
-      description: "Description for Movie 2",
-    },
-    {
-      id: 2,
-      title: "Movie 2",
-      genre: "Comedy",
-      description: "Description for Movie 2",
-    },
-    {
-      id: 2,
-      title: "Movie 2",
-      genre: "Comedy",
-      description: "Description for Movie 2",
-    },
+    // Add more movies
   ];
 
   const genres = ["All", "Action", "Comedy", "Drama", "Horror"];
@@ -60,18 +38,27 @@ const Home = () => {
   const times = ["Morning", "Afternoon", "Evening"];
   const shows = ["Show 1", "Show 2", "Show 3"];
 
-  const filteredMovies = movies.filter(
-    (movie) =>
-      (selectedGenre === "All" || movie.genre === selectedGenre) &&
-      movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredMovies = movies
+    .filter(
+      (movie) =>
+        (selectedGenre === "All" || movie.genre === selectedGenre) &&
+        movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOption === "title") {
+        return a.title.localeCompare(b.title);
+      } else if (sortOption === "genre") {
+        return a.genre.localeCompare(b.genre);
+      }
+      return 0;
+    });
 
   const handleBookTickets = (movie) => {
-    navigate(`/product-detail/${movie.id}`);
+    setSelectedMovie(movie);
   };
 
   const handlePurchase = () => {
-    const totalPrice = tickets * 10; // Assume each ticket costs $10
+    const totalPrice = tickets * 10;
     const finalPrice = totalPrice - (totalPrice * discount) / 100;
     alert(
       `You have purchased ${tickets} tickets for ${
@@ -145,6 +132,13 @@ const Home = () => {
               </option>
             ))}
           </select>
+          <select
+            value={sortOption}
+            onChange={(event) => setSortOption(event.target.value)}
+          >
+            <option value="title">Sort by Title</option>
+            <option value="genre">Sort by Genre</option>
+          </select>
         </div>
         <div className="movie-listings">
           {filteredMovies.map((movie) => (
@@ -217,7 +211,7 @@ const Home = () => {
               </select>
             </label>
             <label>
-              Number of Tickets:
+              Tickets:
               <input
                 type="number"
                 value={tickets}
@@ -232,7 +226,7 @@ const Home = () => {
                 value={discountCode}
                 onChange={(event) => setDiscountCode(event.target.value)}
               />
-              <button onClick={applyDiscount}> Apply</button>
+              <button onClick={applyDiscount}>Apply</button>
             </label>
             <label>
               Payment Method:
@@ -240,17 +234,12 @@ const Home = () => {
                 value={paymentMethod}
                 onChange={(event) => setPaymentMethod(event.target.value)}
               >
-                <option value="Momo">Momo</option>
-                <option value="ZaloPay">ZaloPay</option>
-                <option value="VNPay">VNPay</option>
                 <option value="credit-card">Credit Card</option>
                 <option value="paypal">PayPal</option>
-                <option value="bank-transfer">Bank Transfer</option>
                 <option value="cash">Cash</option>
               </select>
             </label>
             <button onClick={handlePurchase}>Purchase</button>
-            <button onClick={() => setSelectedMovie(null)}>Cancel</button>
           </div>
         )}
       </div>
