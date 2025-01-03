@@ -79,6 +79,13 @@
   font-size: 1rem;
 }
 
+.booking-section input:focus,
+.booking-section select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
 .booking-section button {
   padding: 10px 20px;
   border: none;

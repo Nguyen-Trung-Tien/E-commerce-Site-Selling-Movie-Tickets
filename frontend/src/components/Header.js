@@ -61,9 +61,9 @@ const Header = (props) => {
                     {" "}
                     Manage Users
                   </NavLink>
-                  <NavLink to="/ProductDetail" className="nav-link">
+                  <NavLink to="/MovieDetail" className="nav-link">
                     {" "}
-                    Product Detail
+                    Movie Detail
                   </NavLink>
                   <NavLink to="/about" className="nav-link">
                     {" "}
