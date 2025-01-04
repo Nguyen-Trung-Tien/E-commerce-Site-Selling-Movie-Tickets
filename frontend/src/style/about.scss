@@ -38,3 +38,41 @@
 .terms-container li {
   margin-bottom: 10px;
 }
+
+// Add styles for .d-flex and .justify-content-around
+.d-flex {
+  display: flex;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+// Add styles for .card
+.card {
+  margin: 10px;
+}
+
+// Add styles for Accordion
+.accordion {
+  margin-bottom: 20px;
+}
+
+.accordion-item {
+  border: 1px solid #ddd;
+}
+
+.accordion-header {
+  background-color: #f7f7f7;
+}
+
+.accordion-body {
+  padding: 20px;
+}
+
+// Add styles for .footer-content
+.footer-content {
+  padding: 20px;
+  background-color: #f1f1f1;
+  border-top: 1px solid #ddd;
+}

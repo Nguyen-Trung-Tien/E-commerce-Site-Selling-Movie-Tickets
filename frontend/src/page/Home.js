@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Carousel from "react-bootstrap/Carousel";
+import ExampleCarouselImage from "../components/ExampleCarouselImage";
 import { useNavigate } from "react-router-dom";
 import "../style/Home.scss";
 
@@ -13,8 +15,6 @@ const Home = () => {
   const [discountCode, setDiscountCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [selectedShow, setSelectedShow] = useState("");
   const [sortOption, setSortOption] = useState("title");
 
   const movies = [
@@ -30,14 +30,9 @@ const Home = () => {
       genre: "Comedy",
       description: "Description for Movie 2",
     },
-    // Add more movies
   ];
 
   const genres = ["All", "Action", "Comedy", "Drama", "Horror"];
-  const showtimes = ["10:00 AM", "1:00 PM", "4:00 PM", "7:00 PM", "10:00 PM"];
-  const times = ["Morning", "Afternoon", "Evening"];
-  const shows = ["Show 1", "Show 2", "Show 3"];
-
   const filteredMovies = movies
     .filter(
       (movie) =>
@@ -63,7 +58,7 @@ const Home = () => {
     alert(
       `You have purchased ${tickets} tickets for ${
         selectedMovie.title
-      } on ${selectedDate} at ${selectedShowtime} (${selectedTime} - ${selectedShow}) for $${finalPrice.toFixed(
+      } on ${selectedDate} at ${selectedShowtime} for $${finalPrice.toFixed(
         2
       )} using ${paymentMethod}`
     );
@@ -75,24 +70,36 @@ const Home = () => {
     setDiscount(0);
     setPaymentMethod("credit-card");
   };
-
-  const applyDiscount = () => {
-    if (discountCode === "SALE20") {
-      setDiscount(20);
-    } else if (discountCode === "SALE50") {
-      setDiscount(50);
-    } else {
-      alert("Invalid discount code");
-    }
-  };
-
   return (
     <div className="home-container">
       <div className="banner">
-        <h2>Special Sale! Get 20% off on all tickets with code SALE20</h2>
+        <Carousel>
+          <Carousel.Item>
+            <ExampleCarouselImage text="First slide" />
+            <Carousel.Caption>
+              <h3>First slide label</h3>
+              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <ExampleCarouselImage text="Second slide" />
+            <Carousel.Caption>
+              <h3>Second slide label</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <ExampleCarouselImage text="Third slide" />
+            <Carousel.Caption>
+              <h3>Third slide label</h3>
+              <p>
+                Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+              </p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        </Carousel>
       </div>
       <div className="main-content">
-        <h1>Home</h1>
         <div className="search-filter">
           <input
             type="text"
@@ -107,28 +114,6 @@ const Home = () => {
             {genres.map((genre) => (
               <option key={genre} value={genre}>
                 {genre}
-              </option>
-            ))}
-          </select>
-          <select
-            value={selectedTime}
-            onChange={(event) => setSelectedTime(event.target.value)}
-          >
-            <option value="">Select Time</option>
-            {times.map((time) => (
-              <option key={time} value={time}>
-                {time}
-              </option>
-            ))}
-          </select>
-          <select
-            value={selectedShow}
-            onChange={(event) => setSelectedShow(event.target.value)}
-          >
-            <option value="">Select Show</option>
-            {shows.map((show) => (
-              <option key={show} value={show}>
-                {show}
               </option>
             ))}
           </select>
@@ -151,98 +136,31 @@ const Home = () => {
               />
               <h2>{movie.title}</h2>
               <p>{movie.description}</p>
-              <button onClick={() => handleBookTickets(movie)}>
-                Book Tickets
-              </button>
+              <button onClick={() => handleBookTickets(movie)}>Mua vé</button>
             </div>
           ))}
         </div>
-        {selectedMovie && (
-          <div className="booking-modal">
-            <h2>Book Tickets for {selectedMovie.title}</h2>
-            <label>
-              Date:
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(event) => setSelectedDate(event.target.value)}
-              />
-            </label>
-            <label>
-              Showtime:
-              <select
-                value={selectedShowtime}
-                onChange={(event) => setSelectedShowtime(event.target.value)}
-              >
-                <option value="">Select Showtime</option>
-                {showtimes.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Time:
-              <select
-                value={selectedTime}
-                onChange={(event) => setSelectedTime(event.target.value)}
-              >
-                <option value="">Select Time</option>
-                {times.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Show:
-              <select
-                value={selectedShow}
-                onChange={(event) => setSelectedShow(event.target.value)}
-              >
-                <option value="">Select Show</option>
-                {shows.map((show) => (
-                  <option key={show} value={show}>
-                    {show}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Tickets:
-              <input
-                type="number"
-                value={tickets}
-                onChange={(event) => setTickets(event.target.value)}
-                min="1"
-              />
-            </label>
-            <label>
-              Discount Code:
-              <input
-                type="text"
-                value={discountCode}
-                onChange={(event) => setDiscountCode(event.target.value)}
-              />
-              <button onClick={applyDiscount}>Apply</button>
-            </label>
-            <label>
-              Payment Method:
-              <select
-                value={paymentMethod}
-                onChange={(event) => setPaymentMethod(event.target.value)}
-              >
-                <option value="credit-card">Credit Card</option>
-                <option value="paypal">PayPal</option>
-                <option value="cash">Cash</option>
-              </select>
-            </label>
-            <button onClick={handlePurchase}>Purchase</button>
-          </div>
-        )}
       </div>
+      <footer>
+        <div className="footer-content">
+          <div className="contact">
+            <h3>Liên Hệ</h3>
+            <p>123-456-7890</p>
+            <p>123 Đường Trường Chinh</p>
+            <p>Quận Tân Bình</p>
+            <p>Thành phố Hồ Chí Minh</p>
+          </div>
+          <div className="about">
+            <h3>Về Chúng Tôi</h3>
+            <p>
+              Chúng tôi là công ty chuyên cung cấp vé xem phim trực tuyến. Với
+              nhiều năm kinh nghiệm trong ngành giải trí, chúng tôi cam kết mang
+              đến cho khách hàng những trải nghiệm xem phim tuyệt vời nhất. Hãy
+              liên hệ với chúng tôi để biết thêm chi tiết.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

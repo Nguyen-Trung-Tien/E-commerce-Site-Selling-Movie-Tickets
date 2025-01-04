@@ -47,7 +47,7 @@ const Header = (props) => {
               className="d-inline-block align-top"
               alt="React Bootstrap Logo"
             />
-            <span>E-Commerce</span>
+            <span>GOOD MOVIE </span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -55,39 +55,39 @@ const Header = (props) => {
               <>
                 <Nav className="me-auto">
                   <NavLink to="/" className="nav-link">
-                    Home
+                    Trang chủ
                   </NavLink>
-                  <NavLink to="/users" className="nav-link">
+                  {/* <NavLink to="/users" className="nav-link">
                     {" "}
-                    Manage Users
-                  </NavLink>
+                    Quản lý người dùng
+                  </NavLink> */}
                   <NavLink to="/MovieDetail" className="nav-link">
                     {" "}
-                    Movie Detail
+                    Phim
                   </NavLink>
                   <NavLink to="/about" className="nav-link">
                     {" "}
-                    About
+                    Giới thiệu
                   </NavLink>
                 </Nav>
                 <Nav>
                   {user && !user.email && !user.auth && (
                     <NavLink to="/register" className="nav-link">
                       {" "}
-                      Register
+                      Đăng ký
                     </NavLink>
                   )}
                   {user && user.email && (
-                    <span className="nav-link"> Wellcome {user.email}</span>
+                    <span className="nav-link"> Xin chào {user.email}</span>
                   )}
-                  <NavDropdown title="Settings">
+                  <NavDropdown title="Cài đặt">
                     {user && user.auth === true ? (
                       <NavDropdown.Item onClick={() => handleLogout()}>
-                        Logout
+                        Đăng xuất
                       </NavDropdown.Item>
                     ) : (
                       <NavLink to="/login" className="dropdown-item">
-                        Login
+                        Đăng nhập
                       </NavLink>
                     )}
                   </NavDropdown>
