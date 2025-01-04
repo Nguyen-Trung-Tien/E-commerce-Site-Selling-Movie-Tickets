@@ -11,18 +11,16 @@ const ProductDetail = () => {
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
 
   useEffect(() => {
-    const fetchedMovie = {
-      id: movieId,
-      title: "Movie Title",
-      description: "This is a brief description of the movie.",
-      releaseDate: "2023-10-01",
-      duration: 120,
-      genre: "Action, Adventure",
-      image: "movie-poster.jpg",
-      showtimes: ["10:00 AM", "1:00 PM", "4:00 PM", "7:00 PM", "10:00 PM"],
-      price: 10,
+    const fetchMovie = async () => {
+      try {
+        const response = await fetch(`/api/movies/${movieId}`);
+        const data = await response.json();
+        setMovie(data);
+      } catch (error) {
+        console.error("Error fetching movie:", error);
+      }
     };
-    setMovie(fetchedMovie);
+    fetchMovie();
   }, [movieId]);
 
   const handlePurchase = () => {

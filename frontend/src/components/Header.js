@@ -74,7 +74,7 @@ const Header = (props) => {
                   {user && !user.email && !user.auth && (
                     <NavLink to="/register" className="nav-link">
                       {" "}
-                      Đăng ký
+                      Đăng ký tài khoản
                     </NavLink>
                   )}
                   {user && user.email && (

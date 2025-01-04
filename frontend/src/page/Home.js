@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Carousel from "react-bootstrap/Carousel";
-import ExampleCarouselImage from "../components/ExampleCarouselImage";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../style/Home.scss";
 
 const Home = () => {
@@ -16,6 +16,20 @@ const Home = () => {
   const [discount, setDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
   const [sortOption, setSortOption] = useState("title");
+  const [bannerImages, setBannerImages] = useState([]);
+
+  useEffect(() => {
+    const fetchBannerImages = async () => {
+      try {
+        const response = await axios.get("/api/banner-images");
+        setBannerImages(response.data);
+      } catch (error) {
+        console.error("Error fetching banner images:", error);
+      }
+    };
+
+    fetchBannerImages();
+  }, []);
 
   const movies = [
     {
@@ -70,33 +84,20 @@ const Home = () => {
     setDiscount(0);
     setPaymentMethod("credit-card");
   };
+
   return (
     <div className="home-container">
       <div className="banner">
         <Carousel>
-          <Carousel.Item>
-            <ExampleCarouselImage text="First slide" />
-            <Carousel.Caption>
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item>
-            <ExampleCarouselImage text="Second slide" />
-            <Carousel.Caption>
-              <h3>Second slide label</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item>
-            <ExampleCarouselImage text="Third slide" />
-            <Carousel.Caption>
-              <h3>Third slide label</h3>
-              <p>
-                Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-              </p>
-            </Carousel.Caption>
-          </Carousel.Item>
+          {bannerImages.map((image, index) => (
+            <Carousel.Item key={index}>
+              <img src={image.url} alt={`Slide ${index + 1}`} />
+              <Carousel.Caption>
+                <h3>{image.title}</h3>
+                <p>{image.description}</p>
+              </Carousel.Caption>
+            </Carousel.Item>
+          ))}
         </Carousel>
       </div>
       <div className="main-content">

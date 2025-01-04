@@ -50,10 +50,10 @@ const Register = () => {
 
   return (
     <div className="Register-container">
-      <h1 className="title">Register</h1>
+      <h1 className="title">Đăng ký</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Tên đăng ký</label>
           <input
             type="text"
             id="username"
@@ -74,8 +74,18 @@ const Register = () => {
           />
           {errors.email && <div className="error">{errors.email}</div>}
         </div>
+        <div className="input-4">
+          <label htmlFor="confirmPassword">Số điện thoại</label>
+          <input
+            type="text"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+        </div>
         <div className="input-2">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Mật khẩu</label>
           <input
             type="password"
             id="password"
@@ -85,8 +95,9 @@ const Register = () => {
           />
           {errors.password && <div className="error">{errors.password}</div>}
         </div>
+
         <div className="input-3">
-          <label htmlFor="confirmPassword">Confirm Password</label>
+          <label htmlFor="confirmPassword">Nhập lại mật khẩu</label>
           <input
             type="password"
             id="confirmPassword"
@@ -98,11 +109,11 @@ const Register = () => {
             <div className="error">{errors.confirmPassword}</div>
           )}
         </div>
-        <button type="submit">Register</button>
+        <button type="submit">Đăng ký</button>
       </form>
       {successMessage && <div className="success">{successMessage}</div>}
       <div className="back" onClick={handleBackToLogin}>
-        <i className="icon-back"></i>Back to login
+        <i className="icon-back"></i>Đăng nhập
       </div>
     </div>
   );

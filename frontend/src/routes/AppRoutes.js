@@ -6,8 +6,6 @@ import TableUsers from "../components/TableUsers";
 import Register from "../page/register";
 import PrivateRoute from "./PrivatRoute";
 // import Admin from "../Admin/layouts/Admin";
-import Booking from "../page/Booking";
-import Payment from "../page/Payment";
 import About from "../page/about";
 import NotFound from "./NotFound";
 // import UserManagement from "../Admin/pages/UserManagement"; // Updated import path
@@ -20,8 +18,6 @@ const AppRoutes = () => {
         {/* <Route path="/admin" element={<Admin />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/booking" element={<Booking />} />
-        <Route path="/payment" element={<Payment />} />
         <Route path="/about" element={<About />} />
 
         <Route path="/MovieDetail" element={<MovieDetail />} />
