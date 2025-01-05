@@ -6,7 +6,6 @@ const productSchema = {
   },
   description: {
     type: String,
-    required: true,
   },
   countInStock: {
     type: Number,
