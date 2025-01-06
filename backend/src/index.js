@@ -1,32 +1,33 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const mysql = require("mysql2");
+
+// Load environment variables
+dotenv.config({ path: "./src/.env" });
+
+const db = require("./config/dbConfig");
+const createProductTable = require("./model/ProductModel");
+const createUserTable = require("./model/UserModel");
 const router = require("./router");
 const bodyParser = require("body-parser");
-dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
 app.use(express.json());
-const port = process.env.PORT || 5000;
-
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
-router(app);
 app.use(bodyParser.json());
-db.connect((err) => {
-  if (err) {
-    console.error("Error connecting to MySQL:", err);
-    process.exit(1);
-  } else {
-    console.log("Connected to MySQL");
-  }
+
+// Create tables
+createProductTable();
+createUserTable();
+
+router(app);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

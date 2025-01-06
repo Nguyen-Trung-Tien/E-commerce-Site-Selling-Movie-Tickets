@@ -128,7 +128,11 @@ const Home = () => {
         </div>
         <div className="movie-listings">
           {filteredMovies.map((movie) => (
-            <div key={movie.id} className="movie-card">
+            <div
+              key={movie.id}
+              className="movie-card"
+              style={{ width: "300px" }}
+            >
               <img
                 src={movie.image || "placeholder-image.jpg"}
                 alt={movie.title}
