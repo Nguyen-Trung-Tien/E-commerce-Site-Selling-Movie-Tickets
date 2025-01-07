@@ -1,56 +1,31 @@
-import "./App.scss";
-import Header from "./components/Header";
-import Container from "react-bootstrap/Container";
-import { ToastContainer } from "react-toastify";
-import { Bounce } from "react-toastify";
-import { useEffect } from "react";
-import AppRoutes from "./routes/AppRoutes";
-import { useSelector, useDispatch } from "react-redux";
-import { handleRefresh } from "./redux/actions/userAction";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import React, { Fragment } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { routes } from "./routes/index";
+import HeaderComponent from "./component/HeaderComponent/HeaderComponent";
+import DefaultComponent from "./component/DefaultComponent/DefaultComponent";
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      dispatch(handleRefresh());
-    }
-  }, []);
-
-  // useEffect(() => {
-  //   fetchApi();
-  // });
-
-  const fetchApi = async () => {
-    const res = await axios.get(`${process.env.REACT_API_URL}/product/get-all`);
-  };
-
-  const query = useQuery({ queryKey: ["todos"], queryFn: fetchApi });
-
   return (
-    <>
-      <div className="app-container">
-        <Header />
-        <Container>
-          <AppRoutes />
-        </Container>
-      </div>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
-    </>
+    <div>
+      <Router>
+        <Routes>
+          {routes.map((route) => {
+            const Page = route.page;
+            const Layout = route.isShowHeader ? DefaultComponent : Fragment;
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
+              />
+            );
+          })}
+        </Routes>
+      </Router>
+    </div>
   );
 }
 

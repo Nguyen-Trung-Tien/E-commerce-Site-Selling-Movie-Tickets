@@ -1,8 +1,7 @@
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from '../redux/reducers/rootReducer';
-import { thunk } from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
-
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
-
-export default store;
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "./slides/counterSlide";
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+});
