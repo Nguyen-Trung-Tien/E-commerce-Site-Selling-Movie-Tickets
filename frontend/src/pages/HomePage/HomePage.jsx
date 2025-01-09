@@ -11,9 +11,6 @@ import slider2 from "../../assets/images/slider2.jpg";
 import slider3 from "../../assets/images/slider3.jpg";
 import slider4 from "../../assets/images/slider4.jpg";
 import CardComponent from "../../component/CardComponent/CardComponent";
-import NavBarComponent from "../../component/NavBarComponent/NavBarComponent";
-import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
-import { Button } from "antd";
 
 const HomePage = () => {
   const arr = [
@@ -24,7 +21,7 @@ const HomePage = () => {
   ];
   return (
     <>
-      <div style={{ padding: "0 120px" }}>
+      <div style={{ padding: "0 120px", background: "#efefef" }}>
         <WrapperTypeProduct>
           {arr.map((item) => {
             return <TypeProduct name={item} key={item} />;

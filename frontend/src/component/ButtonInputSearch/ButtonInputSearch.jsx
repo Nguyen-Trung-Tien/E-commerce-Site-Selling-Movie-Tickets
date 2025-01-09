@@ -1,4 +1,3 @@
-import { Button } from "antd";
 import React from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import InputComponent from "../InputComponent/InputComponent";

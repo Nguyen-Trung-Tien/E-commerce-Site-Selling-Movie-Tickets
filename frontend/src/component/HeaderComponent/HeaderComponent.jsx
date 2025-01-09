@@ -12,7 +12,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import ButtonInputSearch from "../DefaultComponent/ButtonInputSearch";
+import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch"; // Ensure this path is correct
 
 const HeaderComponent = () => {
   return (
