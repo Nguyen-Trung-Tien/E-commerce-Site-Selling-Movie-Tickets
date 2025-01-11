@@ -4,6 +4,7 @@ const productSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      quired: true,
     },
     image: {
       type: String,
@@ -27,7 +28,6 @@ const productSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }
