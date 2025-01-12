@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import { Badge, Col } from "antd";
 import {
   WrapperHeader,
@@ -13,8 +13,13 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch"; // Ensure this path is correct
+import { useNavigate } from "react-router-dom";
 
 const HeaderComponent = () => {
+  const navigate = useNavigate();
+  const handleNavigateLogin = () => {
+    navigate("/sign-in");
+  };
   return (
     <div>
       <WrapperHeader>
@@ -23,7 +28,6 @@ const HeaderComponent = () => {
         </Col>
         <Col span={12}>
           <ButtonInputSearch
-            bordered={false}
             size="large"
             textButton="Tìm kiếm"
             placeholder="Tìm kiếm phim của bạn..."
@@ -37,7 +41,7 @@ const HeaderComponent = () => {
         >
           <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: "30px" }} />
-            <div>
+            <div onClick={handleNavigateLogin} style={{ cursor: "pointer" }}>
               <WrapperTextHeaderSmall style={{ fontSize: "12px" }}>
                 Đăng nhập/Đăng ký
               </WrapperTextHeaderSmall>

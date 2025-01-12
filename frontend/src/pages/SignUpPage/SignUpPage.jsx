@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import {
   WrapperContainerLeft,
   WrapperContainerRight,
@@ -8,7 +9,48 @@ import InputForm from "../../component/InputForm/InputForm";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { Image } from "antd";
 import imageLogo from "../../assets/images/sign-in.png";
+import { useNavigate } from "react-router-dom";
+import * as UserService from "../../services/UserService";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import Loading from "../../component/LoadingComponent/Loading";
+
 const SignUpPage = () => {
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const handleOnChangeEmail = (value) => {
+    setEmail(value);
+  };
+
+  const handleOnChangePassword = (value) => {
+    setPassword(value);
+  };
+
+  const handleOnChangeConfirmPassword = (value) => {
+    setConfirmPassword(value);
+  };
+  const navigate = useNavigate();
+  const handleNavigateLogin = () => {
+    navigate("/sign-in");
+  };
+  const mutation = useMutationHook((data) => UserService.signupUser(data));
+  const { data, isPending } = mutation;
+
+  const handleSignUp = () => {
+    mutation.mutate({ email, password, confirmPassword });
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsShowPassword(!isShowPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setIsShowConfirmPassword(!isShowConfirmPassword);
+  };
+
   return (
     <div
       style={{
@@ -34,33 +76,84 @@ const SignUpPage = () => {
           <InputForm
             style={{ marginBottom: "10px" }}
             placeholder="abc@gmail.com"
+            value={email}
+            onChange={handleOnChangeEmail}
           />
-
-          <InputForm placeholder="Mật khẩu" style={{ marginBottom: "10px" }} />
-          <InputForm placeholder="Nhập lại mật khẩu" />
-
-          <ButtonComponent
-            bordered={false}
-            size={40}
-            styleButton={{
-              background: "rgb(255,57, 69)",
-              height: "48px",
-              width: "100%",
-              border: "none",
-              borderRadius: "4px",
-              margin: "26px 0 10px ",
-            }}
-            textButton={"Đăng nhập"}
-            styleTextButton={{
-              color: "#fff",
-              fontSize: "15px",
-              fontWeight: "700",
-            }}
-          />
-
+          <div style={{ position: "relative", marginBottom: "10px" }}>
+            <InputForm
+              type={isShowPassword ? "text" : "password"}
+              placeholder="Mật khẩu"
+              value={password}
+              onChange={handleOnChangePassword}
+            />
+            <span
+              onClick={togglePasswordVisibility}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+            >
+              {isShowPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+            </span>
+          </div>
+          <div style={{ position: "relative" }}>
+            <InputForm
+              type={isShowConfirmPassword ? "text" : "password"}
+              placeholder="Nhập lại mật khẩu"
+              value={confirmPassword}
+              onChange={handleOnChangeConfirmPassword}
+            />
+            <span
+              onClick={toggleConfirmPasswordVisibility}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+            >
+              {isShowConfirmPassword ? (
+                <EyeInvisibleOutlined />
+              ) : (
+                <EyeOutlined />
+              )}
+            </span>
+          </div>
+          {data?.status === "ERR" && (
+            <span style={{ color: "red" }}>{data?.message}</span>
+          )}
+          <Loading isLoading={isPending}>
+            <ButtonComponent
+              disabled={
+                !email.length || !password.length || !confirmPassword.length
+              }
+              onClick={handleSignUp}
+              size={40}
+              styleButton={{
+                background: "rgb(255,57, 69)",
+                height: "48px",
+                width: "100%",
+                border: "none",
+                borderRadius: "4px",
+                margin: "26px 0 10px ",
+              }}
+              textButton={"Đăng ký"}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
+            />
+          </Loading>
           <p>
             Bạn đã có tài khoản?
-            <WrapperTextLight> Đăng ký </WrapperTextLight>
+            <WrapperTextLight onClick={handleNavigateLogin}>
+              Đăng nhập
+            </WrapperTextLight>
           </p>
         </WrapperContainerLeft>
         <WrapperContainerRight>

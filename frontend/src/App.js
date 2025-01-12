@@ -1,9 +1,22 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
+import axios from "axios";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { routes } from "./routes/index";
-import HeaderComponent from "./component/HeaderComponent/HeaderComponent";
 import DefaultComponent from "./component/DefaultComponent/DefaultComponent";
 function App() {
+  useEffect(() => {
+    fetchApi();
+  }, []);
+  const fetchApi = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/product/get-all`
+      );
+      console.log(res);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   return (
     <div>
       <Router>

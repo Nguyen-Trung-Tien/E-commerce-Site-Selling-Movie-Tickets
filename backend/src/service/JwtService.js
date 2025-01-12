@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
+
 const generalAccessToken = (payload) => {
   const access_token = jwt.sign(
     {
@@ -54,6 +55,7 @@ const refreshTokenJwtService = (token) => {
     }
   });
 };
+
 module.exports = {
   generalAccessToken,
   generalRefreshToken,

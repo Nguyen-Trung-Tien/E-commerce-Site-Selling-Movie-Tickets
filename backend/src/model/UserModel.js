@@ -3,7 +3,7 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: false,
     },
     email: {
       type: String,
@@ -13,10 +13,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isAdmin: { type: Boolean, default: false, required: true },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
     phone: {
       type: String,
-      required: true,
+      required: false,
     },
     access_token: {
       type: String,

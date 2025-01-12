@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   WrapperContainerLeft,
   WrapperContainerRight,
@@ -8,8 +8,42 @@ import InputForm from "../../component/InputForm/InputForm";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { Image } from "antd";
 import imageLogo from "../../assets/images/sign-in.png";
+import { useNavigate } from "react-router-dom";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import * as UserService from "../../services/UserService";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import Loading from "../../component/LoadingComponent/Loading";
 
 const SignInPage = () => {
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const mutation = useMutationHook((data) => UserService.loginUser(data));
+  const { data, isPending } = mutation;
+  console.log("mutation", mutation);
+  const handleNavigateSignUp = () => {
+    navigate("/sign-up");
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsShowPassword(!isShowPassword);
+  };
+
+  const handleOnChangeEmail = (value) => {
+    setEmail(value);
+  };
+
+  const handleOnChangePassword = (value) => {
+    setPassword(value);
+  };
+
+  const handleSignIn = () => {
+    mutation.mutate({ email, password });
+    console.log(email, password);
+  };
   return (
     <div
       style={{
@@ -35,33 +69,62 @@ const SignInPage = () => {
           <InputForm
             style={{ marginBottom: "10px" }}
             placeholder="abc@gmail.com"
+            value={email}
+            onChange={handleOnChangeEmail}
           />
-
-          <InputForm placeholder="Mật khẩu" />
-          <ButtonComponent
-            bordered={false}
-            size={40}
-            styleButton={{
-              background: "rgb(255,57, 69)",
-              height: "48px",
-              width: "100%",
-              border: "none",
-              borderRadius: "4px",
-              margin: "26px 0 10px ",
-            }}
-            textButton={"Đăng nhập"}
-            styleTextButton={{
-              color: "#fff",
-              fontSize: "15px",
-              fontWeight: "700",
-            }}
-          />
+          <div style={{ position: "relative" }}>
+            <InputForm
+              type={isShowPassword ? "text" : "password"}
+              placeholder="Mật khẩu"
+              value={password}
+              onChange={handleOnChangePassword}
+            />
+            <span
+              onClick={togglePasswordVisibility}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+            >
+              {isShowPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+            </span>
+          </div>
+          {data?.message && <p style={{ color: "red" }}>{data.message}</p>}
+          <Loading isLoading={isPending}>
+            <ButtonComponent
+              disabled={!email.length || !password.length}
+              onClick={handleSignIn}
+              size={40}
+              styleButton={{
+                background: "rgb(255,57, 69)",
+                height: "48px",
+                width: "100%",
+                border: "none",
+                borderRadius: "4px",
+                margin: "26px 0 10px ",
+              }}
+              textButton={"Đăng nhập"}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
+            />
+          </Loading>
           <p>
             <WrapperTextLight>Quên mật khẩu</WrapperTextLight>
           </p>
           <p>
-            Chưa có tài khoản?{" "}
-            <WrapperTextLight>Tạo tài khoản </WrapperTextLight>
+            Chưa có tài khoản?
+            <WrapperTextLight
+              onClick={handleNavigateSignUp}
+              style={{ cursor: "pointer" }}
+            >
+              Tạo tài khoản{" "}
+            </WrapperTextLight>
           </p>
         </WrapperContainerLeft>
         <WrapperContainerRight>
