@@ -1,6 +1,7 @@
 import React, { use } from "react";
-import { Badge, Col } from "antd";
+import { Badge, Button, Col, Popover } from "antd";
 import {
+  WrapperContentPopup,
   WrapperHeader,
   WrapperHeaderAccount,
   WrapperTextHeader,
@@ -14,12 +15,29 @@ import {
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch"; // Ensure this path is correct
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import * as UserService from "../../services/UserService";
+import { resetUser } from "../../redux/slides/userSlide";
 const HeaderComponent = () => {
   const navigate = useNavigate();
-  const handleNavigateLogin = () => {
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const handleNavigateSignIn = () => {
     navigate("/sign-in");
   };
+
+  const handleLogout = async () => {
+    await UserService.logoutUser();
+    dispatch(resetUser());
+  };
+  const content = (
+    <div>
+      <WrapperContentPopup onClick={handleLogout}>
+        Đăng xuất
+      </WrapperContentPopup>
+      <WrapperContentPopup>Thông tin người dùng</WrapperContentPopup>
+    </div>
+  );
   return (
     <div>
       <WrapperHeader>
@@ -41,17 +59,25 @@ const HeaderComponent = () => {
         >
           <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: "30px" }} />
-            <div onClick={handleNavigateLogin} style={{ cursor: "pointer" }}>
-              <WrapperTextHeaderSmall style={{ fontSize: "12px" }}>
-                Đăng nhập/Đăng ký
-              </WrapperTextHeaderSmall>
-              <div>
+            {user?.name ? (
+              <>
+                <Popover content={content} trigger="click">
+                  <div style={{ cursor: "pointer" }}>{user.name}</div>
+                </Popover>
+              </>
+            ) : (
+              <div onClick={handleNavigateSignIn} style={{ cursor: "pointer" }}>
                 <WrapperTextHeaderSmall style={{ fontSize: "12px" }}>
-                  Tài khoản
+                  Đăng nhập/Đăng ký
                 </WrapperTextHeaderSmall>
-                <CaretDownOutlined />
+                <div>
+                  <WrapperTextHeaderSmall style={{ fontSize: "12px" }}>
+                    Tài khoản
+                  </WrapperTextHeaderSmall>
+                  <CaretDownOutlined />
+                </div>
               </div>
-            </div>
+            )}
           </WrapperHeaderAccount>
           <div>
             <Badge count={1} size="small">

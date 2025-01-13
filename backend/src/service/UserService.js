@@ -164,6 +164,15 @@ const getDetailsUser = (id, data) => {
   });
 };
 
+const logoutUser = () => {
+  return new Promise((resolve) => {
+    resolve({
+      status: "OK",
+      message: "Logout successfully",
+    });
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -171,4 +180,5 @@ module.exports = {
   deleteUser,
   getAllUser,
   getDetailsUser,
+  logoutUser,
 };
