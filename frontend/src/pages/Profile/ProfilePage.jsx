@@ -27,12 +27,14 @@ const ProfilePage = () => {
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
 
-  const dispatch = useDispatch();
   const mutation = useMutationHook(async (data) => {
     const { id, access_token, ...rests } = data;
     await UserService.updateUser(id, rests, access_token);
   });
+
+  const dispatch = useDispatch();
   const { data, isPending, isSuccess, isError } = mutation;
+  console.log(data);
 
   useEffect(() => {
     setEmail(user?.email);
@@ -51,10 +53,10 @@ const ProfilePage = () => {
     }
   }, [isSuccess, isError]);
 
-  async function handleGetDetailsUser(id, token) {
+  const handleGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, access_token: token }));
-  }
+  };
 
   const handleOnChangeEmail = (value) => {
     setEmail(value);

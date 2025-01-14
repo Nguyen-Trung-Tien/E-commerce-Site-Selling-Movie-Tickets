@@ -24,9 +24,11 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: String,
+      required: false,
     },
     avatar: {
       type: String,
+      required: false,
     },
   },
   {

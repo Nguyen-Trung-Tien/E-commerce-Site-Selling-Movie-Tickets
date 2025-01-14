@@ -9,17 +9,17 @@ const createUser = async (req, res) => {
     if (!email || !password) {
       return res.status(200).json({
         status: "ERR",
-        message: "All input fields are required",
+        message: "The input is required",
       });
     } else if (!isCheckEmail) {
       return res.status(200).json({
         status: "ERR",
-        message: "Invalid email format",
+        message: "The input is email ",
       });
     } else if (password !== confirmPassword) {
       return res.status(200).json({
         status: "ERR",
-        message: "Passwords do not match",
+        message: "The  password is equal confirmPassword",
       });
     }
     const response = await UserService.createUser(req.body);
@@ -130,7 +130,7 @@ const getDetailsUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.cookies.refresh_token;
+    const token = await req.cookies.refresh_token;
     if (!token) {
       return res.status(200).json({
         status: "ERR",
@@ -139,7 +139,6 @@ const refreshToken = async (req, res) => {
     }
     const response = await JwtService.refreshTokenJwtService(token);
     return res.status(200).json(response);
-    return;
   } catch (e) {
     return res.status(404).json({
       message: e,
