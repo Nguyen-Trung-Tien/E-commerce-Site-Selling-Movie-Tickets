@@ -4,6 +4,7 @@ import {
   WrapperHeader,
   WrapperInput,
   WrapperLabel,
+  WrapperUploadFile,
 } from "./style";
 import InputForm from "../../component/InputForm/InputForm";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
@@ -13,6 +14,9 @@ import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as Message from "../../component/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
+import { Button, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { getBase64 } from "../../utils";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
@@ -23,11 +27,13 @@ const ProfilePage = () => {
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
 
-  const mutation = useMutationHook((id, data) =>
-    UserService.updateUser(id, data)
-  );
-  const { data, isPending, isSuccess, isError } = mutation;
   const dispatch = useDispatch();
+  const mutation = useMutationHook(async (data) => {
+    const { id, access_token, ...rests } = data;
+    await UserService.updateUser(id, rests, access_token);
+  });
+  const { data, isPending, isSuccess, isError } = mutation;
+
   useEffect(() => {
     setEmail(user?.email);
     setName(user?.name);
@@ -45,10 +51,10 @@ const ProfilePage = () => {
     }
   }, [isSuccess, isError]);
 
-  const handleGetDetailsUser = async (id, token) => {
+  async function handleGetDetailsUser(id, token) {
     const res = await UserService.getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, access_token: token }));
-  };
+  }
 
   const handleOnChangeEmail = (value) => {
     setEmail(value);
@@ -62,19 +68,30 @@ const ProfilePage = () => {
   const handleOnChangeAddress = (value) => {
     setAddress(value);
   };
-  const handleOnChangeAvatar = (value) => {
-    setAvatar(value);
+  const handleOnChangeAvatar = async ({ fileList }) => {
+    const file = fileList[0];
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setAvatar(file?.preview);
   };
-
   const handleUpdate = () => {
-    mutation.mutate(user.id, {
+    mutation.mutate({
+      id: user?.id,
       email,
       name,
       phone,
       address,
       avatar,
+      access_token: user?.access_token,
     });
+    if (isSuccess) {
+      Message.success("Cập nhật thành công");
+    } else if (isError) {
+      Message.error("Cập nhật thất bại");
+    }
   };
+
   return (
     <div style={{ width: "1270px", margin: "0 auto", height: "500px" }}>
       <WrapperHeader>Thông tin người dùng</WrapperHeader>
@@ -82,6 +99,21 @@ const ProfilePage = () => {
         <WrapperContentProfile>
           <WrapperInput>
             <WrapperLabel htmlFor="avatar">Avatar</WrapperLabel>
+            <WrapperUploadFile onChange={handleOnChangeAvatar} maxCount={1}>
+              <Button icon={<UploadOutlined />}>Select File</Button>
+            </WrapperUploadFile>
+            {avatar && (
+              <img
+                src={avatar}
+                alt="avatar"
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            )}
             <InputForm
               id="avatar"
               style={{ width: "300px" }}

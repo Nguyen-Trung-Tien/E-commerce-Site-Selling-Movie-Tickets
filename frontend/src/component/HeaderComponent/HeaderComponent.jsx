@@ -17,12 +17,14 @@ import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { resetUser } from "../../redux/slides/userSlide";
 import Loading from "../LoadingComponent/Loading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [userAvatar, setUserAvatar] = useState("");
+  const [userName, setUserName] = useState("");
   const handleNavigateSignIn = () => {
     navigate("/sign-in");
   };
@@ -32,6 +34,12 @@ const HeaderComponent = () => {
     dispatch(resetUser());
     setLoading(false);
   };
+  useEffect(() => {
+    setLoading(true);
+    setUserName(user?.name);
+    setUserAvatar(user?.avatar);
+    setLoading(false);
+  }, [user?.name, user?.avatar]);
   const content = (
     <div>
       <WrapperContentPopup onClick={handleLogout}>
@@ -63,12 +71,25 @@ const HeaderComponent = () => {
         >
           <Loading isLoading={loading}>
             <WrapperHeaderAccount>
-              <UserOutlined style={{ fontSize: "30px" }} />
+              {userAvatar ? (
+                <img
+                  src="{userAvatar}"
+                  style={{
+                    width: "60px",
+                    height: "50px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                  alt="avatar"
+                />
+              ) : (
+                <UserOutlined style={{ fontSize: "30px" }} />
+              )}
               {user?.access_token ? (
                 <>
                   <Popover content={content} trigger="click">
                     <div style={{ cursor: "pointer" }}>
-                      {user?.name?.length ? user?.name : user?.email}
+                      {userName?.length ? userName : user?.email}
                     </div>
                   </Popover>
                 </>
@@ -84,6 +105,7 @@ const HeaderComponent = () => {
                     <WrapperTextHeaderSmall style={{ fontSize: "12px" }}>
                       Tài khoản
                     </WrapperTextHeaderSmall>
+
                     <CaretDownOutlined />
                   </div>
                 </div>

@@ -60,9 +60,7 @@ function App() {
     try {
       const res = await UserService.getDetailsUser(id, token);
       dispatch(updateUser({ ...res?.data, access_token: token }));
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
+    } catch (error) {}
   };
 
   return (
