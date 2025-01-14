@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Avatar } from "antd";
 
 const initialState = {
   name: "",
@@ -19,11 +18,11 @@ export const userSlide = createSlice({
       const {
         name = "",
         email = "",
-        access_token = "",
         avatar = "",
         phone = "",
         _id = "",
         address = "",
+        access_token = "",
       } = action.payload;
       state.name = name;
       state.email = email;

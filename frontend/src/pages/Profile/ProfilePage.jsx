@@ -12,6 +12,7 @@ import * as UserService from "../../services/UserService";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as Message from "../../component/Message/Message";
+import { updateUser } from "../../redux/slides/userSlide";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
@@ -46,7 +47,7 @@ const ProfilePage = () => {
 
   const handleGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token);
-    dispatch(UserService.updateUser({ ...res?.data, access_token: token }));
+    dispatch(updateUser({ ...res?.data, access_token: token }));
   };
 
   const handleOnChangeEmail = (value) => {
