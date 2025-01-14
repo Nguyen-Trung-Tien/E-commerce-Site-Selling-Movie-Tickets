@@ -11,6 +11,7 @@ import imageLogo from "../../assets/images/sign-in.png";
 import { useNavigate } from "react-router-dom";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import * as UserService from "../../services/UserService";
+import * as Message from "../../component/Message/Message";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
 import { jwtDecode } from "jwt-decode";
@@ -26,8 +27,8 @@ const SignInPage = () => {
   const navigate = useNavigate();
 
   const mutation = useMutationHook((data) => UserService.loginUser(data));
-
   const { data, isPending, isSuccess } = mutation;
+
   useEffect(() => {
     if (isSuccess) {
       navigate("/");
@@ -45,7 +46,6 @@ const SignInPage = () => {
     const res = await UserService.getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, access_token: token }));
   };
-  console.log("mutation", mutation);
   const handleNavigateSignUp = () => {
     navigate("/sign-up");
   };
