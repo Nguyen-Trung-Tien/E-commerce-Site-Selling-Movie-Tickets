@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/UserController");
+
 const {
   authMiddleware,
   authUserMiddleware,
@@ -17,6 +18,6 @@ router.get(
   authUserMiddleware,
   userController.getDetailsUser
 );
-router.post("/refresh-token", authUserMiddleware, userController.refreshToken);
+router.post("/refresh-token", userController.refreshToken);
 
 module.exports = router;

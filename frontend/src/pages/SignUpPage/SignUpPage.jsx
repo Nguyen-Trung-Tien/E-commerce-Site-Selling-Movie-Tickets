@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import {
   WrapperContainerLeft,
@@ -10,17 +10,30 @@ import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { Image } from "antd";
 import imageLogo from "../../assets/images/sign-in.png";
 import { useNavigate } from "react-router-dom";
-import * as UserService from "../../services/UserService";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
+import * as UserService from "../../services/UserService";
+import * as message from "../../component/Message/Message";
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const mutation = useMutationHook((data) => UserService.signupUser(data));
+  const { data, isPending, isSuccess, isError } = mutation;
+
+  useEffect(() => {
+    if (isSuccess) {
+      message.success("Đăng ký thành công");
+      handleNavigateSignIn();
+    } else if (isError) {
+      message.error("Đăng ký thất bại");
+    }
+  }, [isSuccess, isError]);
   const handleOnChangeEmail = (value) => {
     setEmail(value);
   };
@@ -32,16 +45,6 @@ const SignUpPage = () => {
   const handleOnChangeConfirmPassword = (value) => {
     setConfirmPassword(value);
   };
-  const navigate = useNavigate();
-  const handleNavigateLogin = () => {
-    navigate("/sign-in");
-  };
-  const mutation = useMutationHook((data) => UserService.signupUser(data));
-  const { data, isPending } = mutation;
-
-  const handleSignUp = () => {
-    mutation.mutate({ email, password, confirmPassword });
-  };
 
   const togglePasswordVisibility = () => {
     setIsShowPassword(!isShowPassword);
@@ -49,6 +52,14 @@ const SignUpPage = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setIsShowConfirmPassword(!isShowConfirmPassword);
+  };
+
+  const handleNavigateSignIn = () => {
+    navigate("/sign-in");
+  };
+
+  const handleSignUp = () => {
+    mutation.mutate({ email, password, confirmPassword });
   };
 
   return (
@@ -126,7 +137,7 @@ const SignUpPage = () => {
           {data?.status === "ERR" && (
             <span style={{ color: "red" }}>{data?.message}</span>
           )}
-          <Loading isLoading={isPending}>
+          <Loading isPending={isPending}>
             <ButtonComponent
               disabled={
                 !email.length || !password.length || !confirmPassword.length
@@ -151,7 +162,7 @@ const SignUpPage = () => {
           </Loading>
           <p>
             Bạn đã có tài khoản?
-            <WrapperTextLight onClick={handleNavigateLogin}>
+            <WrapperTextLight onClick={handleNavigateSignIn}>
               Đăng nhập
             </WrapperTextLight>
           </p>

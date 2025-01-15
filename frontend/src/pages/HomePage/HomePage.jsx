@@ -28,14 +28,14 @@ const HomePage = () => {
     return res;
   };
 
-  const { isLoading, data: products } = useQuery({
+  const { isPending, data: products } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProductsAll,
     retry: 3,
     retryDelay: 1000,
   });
 
-  if (isLoading) {
+  if (isPending) {
     return <div>Loading...</div>;
   }
 

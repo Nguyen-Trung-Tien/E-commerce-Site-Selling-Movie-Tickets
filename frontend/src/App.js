@@ -9,31 +9,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "./redux/slides/userSlide";
 import axios from "axios";
 import Loading from "./component/LoadingComponent/Loading";
+import { useQuery } from "@tanstack/react-query";
 function App() {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const user = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   fetchApi();
-  // }, []);
-  // const fetchApi = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `${process.env.REACT_APP_API_URL}/product/get-all`
-  //     );
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
   useEffect(() => {
-    setIsLoading(true);
+    setIsPending(true);
     const { storageData, decoded } = handleDecoded();
     if (decoded?.id) {
       handleGetDetailsUser(decoded?.id, storageData);
     }
-    setIsLoading(false);
+    setIsPending(false);
   }, []);
 
   const handleDecoded = () => {
@@ -67,7 +55,7 @@ function App() {
 
   return (
     <div>
-      <Loading isLoading={isLoading} style={{ background: "#ccc" }}>
+      <Loading isPending={isPending} style={{ background: "#ccc" }}>
         <Router>
           <Routes>
             {routes.map((route) => {

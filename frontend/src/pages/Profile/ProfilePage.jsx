@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
-import * as Message from "../../component/Message/Message";
+import * as message from "../../component/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
 import { Button, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
@@ -46,10 +46,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      Message.success("Cập nhật thành công");
+      message.success("Cập nhật thành công");
       handleGetDetailsUser(user?.id, user?.access_token);
     } else if (isError) {
-      Message.error("Cập nhật thất bại");
+      message.error("Cập nhật thất bại");
     }
   }, [isSuccess, isError]);
 
@@ -88,16 +88,16 @@ const ProfilePage = () => {
       access_token: user?.access_token,
     });
     if (isSuccess) {
-      Message.success("Cập nhật thành công");
+      message.success("Cập nhật thành công");
     } else if (isError) {
-      Message.error("Cập nhật thất bại");
+      message.error("Cập nhật thất bại");
     }
   };
 
   return (
     <div style={{ width: "1270px", margin: "0 auto", height: "500px" }}>
       <WrapperHeader>Thông tin người dùng</WrapperHeader>
-      <Loading isLoading={isPending}>
+      <Loading isPending={isPending}>
         <WrapperContentProfile>
           <WrapperInput>
             <WrapperLabel htmlFor="avatar">Avatar</WrapperLabel>

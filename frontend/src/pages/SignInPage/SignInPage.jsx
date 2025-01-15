@@ -11,7 +11,7 @@ import imageLogo from "../../assets/images/sign-in.png";
 import { useNavigate } from "react-router-dom";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import * as UserService from "../../services/UserService";
-import * as Message from "../../component/Message/Message";
+import * as message from "../../component/Message/Message";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
 import { jwtDecode } from "jwt-decode";
@@ -23,7 +23,6 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   const mutation = useMutationHook((data) => UserService.loginUser(data));
@@ -46,6 +45,7 @@ const SignInPage = () => {
     const res = await UserService.getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, access_token: token }));
   };
+
   const handleNavigateSignUp = () => {
     navigate("/sign-up");
   };
@@ -115,7 +115,7 @@ const SignInPage = () => {
             </span>
           </div>
           {data?.message && <p style={{ color: "red" }}>{data.message}</p>}
-          <Loading isLoading={isPending}>
+          <Loading isPending={isPending}>
             <ButtonComponent
               disabled={!email.length || !password.length}
               onClick={handleSignIn}

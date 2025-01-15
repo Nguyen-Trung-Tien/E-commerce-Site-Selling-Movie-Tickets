@@ -69,7 +69,7 @@ const HeaderComponent = () => {
           span={6}
           style={{ display: "flex", gap: "30px", alignItems: "center" }}
         >
-          <Loading isLoading={loading}>
+          <Loading isPending={loading}>
             <WrapperHeaderAccount>
               {userAvatar ? (
                 <img
