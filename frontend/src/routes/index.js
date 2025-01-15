@@ -45,12 +45,12 @@ export const routes = [
     isShowHeader: true,
   },
   {
-    path: "profile-user",
+    path: "/profile-user",
     page: ProfilePage,
     isShowHeader: true,
   },
   {
-    path: "system/admin",
+    path: "/system/admin",
     page: AdminPage,
     isShowHeader: false,
     isPrivate: true,

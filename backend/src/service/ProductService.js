@@ -10,7 +10,7 @@ const createProduct = (newProduct) => {
       if (checkProduct !== null) {
         resolve({
           status: "OK",
-          message: "The name of product is already taken",
+          message: "The name of product is already ",
         });
       }
       const newProduct = await Product.create({

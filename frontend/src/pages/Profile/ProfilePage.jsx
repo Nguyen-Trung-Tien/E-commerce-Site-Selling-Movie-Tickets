@@ -14,7 +14,7 @@ import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as message from "../../component/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
-import { Button, Upload } from "antd";
+import { Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { getBase64 } from "../../utils";
 
@@ -27,14 +27,13 @@ const ProfilePage = () => {
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
 
-  const mutation = useMutationHook(async (data) => {
+  const mutation = useMutationHook((data) => {
     const { id, access_token, ...rests } = data;
-    await UserService.updateUser(id, rests, access_token);
+    UserService.updateUser(id, rests, access_token);
   });
 
   const dispatch = useDispatch();
   const { data, isPending, isSuccess, isError } = mutation;
-  console.log(data);
 
   useEffect(() => {
     setEmail(user?.email);
@@ -46,10 +45,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      message.success("Cập nhật thành công");
+      message.success();
       handleGetDetailsUser(user?.id, user?.access_token);
     } else if (isError) {
-      message.error("Cập nhật thất bại");
+      message.error();
     }
   }, [isSuccess, isError]);
 
@@ -88,9 +87,9 @@ const ProfilePage = () => {
       access_token: user?.access_token,
     });
     if (isSuccess) {
-      message.success("Cập nhật thành công");
+      message.success();
     } else if (isError) {
-      message.error("Cập nhật thất bại");
+      message.error();
     }
   };
 
@@ -107,13 +106,13 @@ const ProfilePage = () => {
             {avatar && (
               <img
                 src={avatar}
-                alt="avatar"
                 style={{
                   width: "60px",
                   height: "60px",
                   borderRadius: "50%",
                   objectFit: "cover",
                 }}
+                alt="avatar"
               />
             )}
             <InputForm
