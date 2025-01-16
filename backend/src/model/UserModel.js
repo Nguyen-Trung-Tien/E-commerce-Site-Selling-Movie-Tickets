@@ -3,11 +3,11 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      required: false,
     },
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     password: {
       type: String,
@@ -18,22 +18,17 @@ const userSchema = new mongoose.Schema(
       default: false,
       required: true,
     },
-    access_token: {
-      type: String,
-      required: true,
-    },
-    refresh_token: {
-      type: String,
-      required: true,
-    },
     phone: {
       type: String,
+      required: false,
     },
     address: {
       type: String,
+      required: false,
     },
     avatar: {
       type: String,
+      required: false,
     },
   },
   {

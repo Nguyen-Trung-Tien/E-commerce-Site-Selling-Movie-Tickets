@@ -10,24 +10,25 @@ const createProduct = (newProduct) => {
       if (checkProduct !== null) {
         resolve({
           status: "OK",
-          message: "The name of product is already ",
+          message: "The name of product is already taken",
         });
-      }
-      const newProduct = await Product.create({
-        name,
-        image,
-        type,
-        price,
-        countInStock,
-        rating,
-        description,
-      });
-      if (newProduct) {
-        resolve({
-          status: "OK",
-          message: "SUCCESS",
-          data: newProduct,
+      } else {
+        const newProduct = await Product.create({
+          name,
+          image,
+          type,
+          price,
+          countInStock,
+          rating,
+          description,
         });
+        if (newProduct) {
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+            data: newProduct,
+          });
+        }
       }
     } catch (e) {
       reject(e);
@@ -46,20 +47,22 @@ const updateProduct = (id, data) => {
           status: "OK",
           message: "The product is not defined",
         });
+      } else {
+        const updatedProduct = await Product.findByIdAndUpdate(id, data, {
+          new: true,
+        });
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: updatedProduct,
+        });
       }
-      const updatedProduct = await Product.findByIdAndUpdate(id, data, {
-        new: true,
-      });
-      resolve({
-        status: "OK",
-        message: "SUCCESS",
-        data: updatedProduct,
-      });
     } catch (e) {
       reject(e);
     }
   });
 };
+
 const deleteProduct = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -71,17 +74,19 @@ const deleteProduct = (id) => {
           status: "OK",
           message: "The product is not defined",
         });
+      } else {
+        await Product.findByIdAndDelete(id);
+        resolve({
+          status: "OK",
+          message: "Delete product success",
+        });
       }
-      await Product.findByIdAndDelete(id);
-      resolve({
-        status: "OK",
-        message: "Delete product success",
-      });
     } catch (e) {
       reject(e);
     }
   });
 };
+
 const getDetailsProduct = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -93,12 +98,13 @@ const getDetailsProduct = (id) => {
           status: "OK",
           message: "The product is not defined",
         });
+      } else {
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: product,
+        });
       }
-      resolve({
-        status: "OK",
-        message: "SUCCESS",
-        data: product,
-      });
     } catch (e) {
       reject(e);
     }
