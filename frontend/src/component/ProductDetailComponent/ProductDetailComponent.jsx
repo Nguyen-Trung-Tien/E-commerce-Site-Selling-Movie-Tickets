@@ -16,7 +16,8 @@ import {
 } from "./style";
 import { MinusOutlined, PlusOutlined, StarFilled } from "@ant-design/icons";
 const ProductDetailComponent = () => {
-  const onChange = (value) => {};
+  const onChange = (value) => {
+  };
   return (
     <Row style={{ padding: "10px", background: "#fff" }}>
       <Col

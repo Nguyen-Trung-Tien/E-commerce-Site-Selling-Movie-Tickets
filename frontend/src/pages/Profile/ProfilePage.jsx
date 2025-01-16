@@ -112,7 +112,7 @@ const ProfilePage = () => {
                   borderRadius: "50%",
                   objectFit: "cover",
                 }}
-                alt="avatar"
+                alt="avatars"
               />
             )}
             <InputForm

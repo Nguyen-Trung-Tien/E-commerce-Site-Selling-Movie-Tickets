@@ -3,7 +3,6 @@ const createProduct = async (req, res) => {
   try {
     const { name, image, type, price, countInStock, rating, description } =
       req.body;
-
     if (
       !name ||
       !image ||
