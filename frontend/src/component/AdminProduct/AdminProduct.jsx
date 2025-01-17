@@ -553,7 +553,13 @@ const AdminProduct = () => {
                 { required: true, message: "Please input your count image!" },
               ]}
             >
-              <WrapperUploadFile onChange={handleOnChangeAvatar} maxCount={1}>
+              <WrapperUploadFile
+                onChange={handleOnChangeAvatar}
+                fileList={
+                  stateProduct?.image ? [{ url: stateProduct.image }] : []
+                }
+                maxCount={1}
+              >
                 <Button>Select File</Button>
                 {stateProduct?.image && (
                   <img

@@ -188,9 +188,13 @@ const AdminUser = () => {
     {
       title: "Name",
       dataIndex: "name",
-      render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.name.length - b.name.length,
-      ...getColumnSearchProps("name"),
+      sorter: (a, b) => {
+        if (a.name && b.name) {
+          return a.name.localeCompare(b.name);
+        } else {
+          return 0;
+        }
+      },
     },
     {
       title: "Email",
@@ -363,8 +367,8 @@ const AdminUser = () => {
               rules={[{ required: true, message: "Please input your name!" }]}
             >
               <InputComponent
-                value={stateProductUserDetails["name"]}
-                onChange={handleOnChange}
+                value={stateProductUserDetails.name}
+                onChange={handleOnChangeDetails}
                 name="name"
               />
             </Form.Item>
@@ -375,7 +379,7 @@ const AdminUser = () => {
               rules={[{ required: true, message: "Please input your email!" }]}
             >
               <InputComponent
-                value={stateProductUserDetails["email"]}
+                value={stateProductUserDetails.email}
                 onChange={handleOnChangeDetails}
                 name="email"
               />
