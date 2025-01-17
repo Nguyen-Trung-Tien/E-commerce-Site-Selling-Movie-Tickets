@@ -146,7 +146,7 @@ const refreshToken = async (req, res) => {
   }
 };
 
-const logoutUser = async (req, res) => {
+const logoutUser = async (res) => {
   try {
     const response = await UserService.logoutUser();
     res.clearCookie("refresh_token");

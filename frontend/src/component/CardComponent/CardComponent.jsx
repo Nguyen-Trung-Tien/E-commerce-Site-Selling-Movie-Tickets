@@ -11,15 +11,15 @@ import { StarFilled } from "@ant-design/icons";
 
 const CardComponent = (props) => {
   const {
-    countInStock,
-    description,
-    image,
     name,
     price,
+    description,
+    image,
     rating,
     type,
     discount,
     seller,
+    countInStock,
   } = props;
 
   return (

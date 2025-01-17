@@ -62,7 +62,6 @@ const HomePage = () => {
           return (
             <CardComponent
               key={product._id}
-              countInStock={product.countInStock}
               description={product.description}
               image={product.image}
               name={product.name}
@@ -71,6 +70,7 @@ const HomePage = () => {
               type={product.type}
               discount={product.discount}
               seller={product.seller}
+              countInStock={product.countInStock}
             />
           );
         })}
