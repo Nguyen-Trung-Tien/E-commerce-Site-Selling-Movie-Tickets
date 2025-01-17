@@ -130,11 +130,11 @@ const AdminProduct = () => {
     setIsOpenDrawer(true);
   };
 
-  const queryProduct = useQuery({
+  const queryProducts = useQuery({
     queryKey: ["products"],
     queryFn: getAllProduct,
   });
-  const { isPending: isPendingProduct, data: products } = queryProduct;
+  const { isPending: isPendingProduct, data: products } = queryProducts;
 
   const renderAction = () => {
     return (
@@ -332,7 +332,7 @@ const AdminProduct = () => {
       { id: rowSelected, token: user?.access_token },
       {
         onSettled: () => {
-          queryProduct.refetch();
+          queryProducts.refetch();
         },
       }
     );
@@ -370,7 +370,7 @@ const AdminProduct = () => {
   const onFinish = () => {
     mutation.mutate(stateProduct, {
       onSettled: () => {
-        queryProduct.refetch();
+        queryProducts.refetch();
       },
     });
   };
@@ -411,7 +411,7 @@ const AdminProduct = () => {
       },
       {
         onSettled: () => {
-          queryProduct.refetch();
+          queryProducts.refetch();
         },
       }
     );
@@ -448,6 +448,7 @@ const AdminProduct = () => {
         />
       </div>
       <ModalComponent
+        forceRender
         title="Tạo sản phẩm "
         open={isModalOpen}
         onCancel={handleCancel}
@@ -714,6 +715,7 @@ const AdminProduct = () => {
       </DrawerComponent>
 
       <ModalComponent
+        forceRender
         title="Xóa sản phẩm "
         open={isModalOpenDelete}
         onCancel={handleCancelDelete}

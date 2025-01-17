@@ -35,7 +35,7 @@ const CardComponent = (props) => {
         />
       }
     >
-      <img
+      {/* <img
         src="logo"
         style={{
           width: "70px",
@@ -45,7 +45,7 @@ const CardComponent = (props) => {
           left: -1,
           borderTopLeftRadius: "5px",
         }}
-      />
+      /> */}
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>
         <span style={{ marginRight: "10px" }}>
