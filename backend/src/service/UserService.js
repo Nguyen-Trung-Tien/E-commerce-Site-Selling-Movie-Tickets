@@ -55,10 +55,12 @@ const loginUser = (userLogin) => {
           message: "The user password is not correct",
         });
       }
+
       const access_token = await generalAccessToken({
         id: checkUser.id,
         isAdmin: checkUser.isAdmin,
       });
+
       const refresh_token = await generalRefreshToken({
         id: checkUser.id,
         isAdmin: checkUser.isAdmin,
@@ -68,7 +70,7 @@ const loginUser = (userLogin) => {
         status: "OK",
         message: "SUCCESS",
         access_token,
-        refresh_token,
+        refresh_token: refresh_token,
       });
     } catch (e) {
       reject(e);

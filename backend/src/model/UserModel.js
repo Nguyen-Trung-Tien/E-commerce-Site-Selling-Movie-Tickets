@@ -3,11 +3,12 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: false,
+      required: true,
     },
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     phone: {
-      type: String,
+      type: Number,
       required: false,
     },
     address: {
@@ -30,6 +31,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    access_token: { type: String },
+    refresh_token: { type: String },
   },
   {
     timestamps: true,

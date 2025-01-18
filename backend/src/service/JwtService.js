@@ -22,7 +22,7 @@ const generalRefreshToken = (payload) => {
     },
     process.env.REFRESH_TOKEN,
     {
-      expiresIn: "356d",
+      expiresIn: "365s",
     }
   );
   return refresh_token;
