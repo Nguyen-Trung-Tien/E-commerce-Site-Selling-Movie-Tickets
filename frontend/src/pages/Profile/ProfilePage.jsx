@@ -10,7 +10,7 @@ import InputForm from "../../component/InputForm/InputForm";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
-import { useMutationHook } from "../../hooks/useMutationHook";
+import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as message from "../../component/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
@@ -27,7 +27,7 @@ const ProfilePage = () => {
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
 
-  const mutation = useMutationHook((data) => {
+  const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
     UserService.updateUser(id, rests, access_token);
   });

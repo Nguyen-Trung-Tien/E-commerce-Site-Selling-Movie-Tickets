@@ -6,7 +6,7 @@ const createUser = async (req, res) => {
     const { name, email, password, confirmPassword, phone } = req.body;
     const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
     const isCheckEmail = reg.test(email);
-    if (!email || !password) {
+    if (!email || !password || !confirmPassword) {
       return res.status(200).json({
         status: "ERR",
         message: "The input is required",
@@ -99,6 +99,24 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const deleteManyUser = async (req, res) => {
+  try {
+    const ids = req.body.ids;
+    if (!ids) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The ids is required",
+      });
+    }
+    const response = await UserService.deleteManyUser(ids);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 const getAllUser = async (req, res) => {
   try {
     const response = await UserService.getAllUser();
@@ -130,7 +148,7 @@ const getDetailsUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = await req.cookies.refresh_token;
+    const token = req.cookies.refresh_token;
     if (!token) {
       return res.status(200).json({
         status: "ERR",
@@ -146,11 +164,13 @@ const refreshToken = async (req, res) => {
   }
 };
 
-const logoutUser = async (res) => {
+const logoutUser = async (req, res) => {
   try {
-    const response = await UserService.logoutUser();
     res.clearCookie("refresh_token");
-    return res.status(200).json(response);
+    return res.status(200).json({
+      status: "OK",
+      message: "Logout success",
+    });
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -167,4 +187,5 @@ module.exports = {
   getDetailsUser,
   refreshToken,
   logoutUser,
+  deleteManyUser,
 };

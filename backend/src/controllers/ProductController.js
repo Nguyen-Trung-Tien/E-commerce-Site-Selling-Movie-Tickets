@@ -3,21 +3,12 @@ const createProduct = async (req, res) => {
   try {
     const { name, image, type, price, countInStock, rating, description } =
       req.body;
-    if (
-      !name ||
-      !image ||
-      !type ||
-      !price ||
-      !countInStock ||
-      !rating ||
-      !description
-    ) {
+    if (!name || !image || !type || !price || !countInStock || !rating) {
       return res.status(200).json({
         status: "ERR",
         message: "All input fields are required",
       });
     }
-    console.log(req.body);
     const response = await ProductService.createProduct(req.body);
     return res.status(200).json(response);
   } catch (e) {
@@ -56,6 +47,23 @@ const deleteProduct = async (req, res) => {
       });
     }
     const response = await ProductService.deleteProduct(productId);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+const deleteManyProduct = async (req, res) => {
+  try {
+    const ids = req.body.ids;
+    if (!ids) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The ids is required",
+      });
+    }
+    const response = await ProductService.deleteManyProduct(ids);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -104,4 +112,5 @@ module.exports = {
   getDetailsProduct,
   deleteProduct,
   getAllProduct,
+  deleteManyProduct,
 };

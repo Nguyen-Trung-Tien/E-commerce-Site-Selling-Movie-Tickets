@@ -13,7 +13,7 @@ import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
 import * as message from "../../component/Message/Message";
 import * as UserService from "../../services/UserService";
-import { useMutationHook } from "../../hooks/useMutationHook";
+import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../component/LoadingComponent/Loading";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
@@ -26,7 +26,7 @@ const SignInPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutation = useMutationHook((data) => UserService.loginUser(data));
+  const mutation = useMutationHooks((data) => UserService.loginUser(data));
   const { data, isPending, isSuccess } = mutation;
 
   useEffect(() => {

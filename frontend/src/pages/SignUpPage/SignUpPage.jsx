@@ -10,7 +10,7 @@ import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { Image } from "antd";
 import imageLogo from "../../assets/images/sign-in.png";
 import { useNavigate } from "react-router-dom";
-import { useMutationHook } from "../../hooks/useMutationHook";
+import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as UserService from "../../services/UserService";
 import * as message from "../../component/Message/Message";
@@ -23,7 +23,7 @@ const SignUpPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const mutation = useMutationHook((data) => UserService.signupUser(data));
+  const mutation = useMutationHooks((data) => UserService.signupUser(data));
   const { data, isPending, isSuccess, isError } = mutation;
 
   useEffect(() => {

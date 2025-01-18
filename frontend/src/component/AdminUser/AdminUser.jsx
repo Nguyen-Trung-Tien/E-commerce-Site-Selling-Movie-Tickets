@@ -13,7 +13,7 @@ import ModalComponent from "../ModalComponent/ModalComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
-import { useMutationHook } from "../../hooks/useMutationHook";
+import { useMutationHooks } from "../../hooks/useMutationHooks";
 import * as message from "../../component/Message/Message";
 import * as UserService from "../../services/UserService";
 import { useQuery } from "@tanstack/react-query";
@@ -44,13 +44,19 @@ const AdminUser = () => {
     isAdmin: false,
   });
 
-  const mutationUpdate = useMutationHook((data) => {
+  const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
     const res = UserService.updateUser(id, { ...rests }, token);
     return res;
   });
 
-  const mutationDeleted = useMutationHook((data) => {
+  const mutationDeletedMany = useMutationHooks((data) => {
+    const { token, ...ids } = data;
+    const res = UserService.deleteManyUser(ids, token);
+    return res;
+  });
+
+  const mutationDeleted = useMutationHooks((data) => {
     const { id, token } = data;
     const res = UserService.deleteUser(id, token);
     return res;
@@ -67,6 +73,13 @@ const AdminUser = () => {
     isSuccess: isSuccessDeleted,
     isError: isErrorDeleted,
   } = mutationDeleted;
+
+  const {
+    data: dataDeletedMany,
+    isPending: isPendingDeletedMany,
+    isSuccess: isSuccessDeletedMany,
+    isError: isErrorDeletedMany,
+  } = mutationDeletedMany;
 
   const {
     data: dataUpdated,
@@ -93,11 +106,11 @@ const AdminUser = () => {
   }, [form, stateProductUserDetails]);
 
   useEffect(() => {
-    if (rowSelected) {
+    if (rowSelected && isOpenDrawer) {
       setIsPendingUpdate(true);
       fetchGetDetailsUser(rowSelected);
     }
-  }, [rowSelected]);
+  }, [rowSelected, isOpenDrawer]);
 
   const handleDetailsUser = () => {
     setIsOpenDrawer(true);
@@ -251,6 +264,15 @@ const AdminUser = () => {
   }, [isSuccessDeleted]);
 
   useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
+      message.success();
+      handleCancelDelete();
+    } else if (isErrorDeletedMany) {
+      message.error();
+    }
+  }, [isSuccessDeletedMany]);
+
+  useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === "OK") {
       message.success();
       handleCloseDrawer();
@@ -266,6 +288,17 @@ const AdminUser = () => {
   const handleDeleteUser = () => {
     mutationDeleted.mutate(
       { id: rowSelected, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryUser.refetch();
+        },
+      }
+    );
+  };
+
+  const handleDeleteManyUsers = (ids) => {
+    mutationDeletedMany.mutate(
+      { ids: ids, token: user?.access_token },
       {
         onSettled: () => {
           queryUser.refetch();
@@ -333,6 +366,7 @@ const AdminUser = () => {
 
       <div style={{ marginTop: "20px" }}>
         <TableComponent
+          handleDeleteMany={handleDeleteManyUsers}
           columns={columns}
           isPending={isPendingUser}
           data={dataTable}

@@ -1,17 +1,8 @@
 const Product = require("../model/ProductModel");
 const createProduct = (newProduct) => {
   return new Promise(async (resolve, reject) => {
-    const {
-      name,
-      image,
-      type,
-      price,
-      countInStock,
-      rating,
-      description,
-      seller,
-      discount,
-    } = newProduct;
+    const { name, image, type, countInStock, price, rating, description } =
+      newProduct;
     try {
       const checkProduct = await Product.findOne({
         name: name,
@@ -26,12 +17,10 @@ const createProduct = (newProduct) => {
         name,
         image,
         type,
-        price,
         countInStock,
+        price,
         rating,
-        seller,
         description,
-        discount,
       });
       if (newProduct) {
         resolve({
@@ -95,6 +84,21 @@ const deleteProduct = (id) => {
   });
 };
 
+const deleteManyProduct = (ids) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await Product.deleteMany({
+        _id: ids,
+      });
+      resolve({
+        status: "OK",
+        message: "Delete product success",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 const getDetailsProduct = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -123,13 +127,11 @@ const getAllProduct = (limit, page, sort, filter) => {
     try {
       const totalProduct = await Product.countDocuments();
       let query = Product.find();
-
       if (filter) {
         const objectFilter = {};
         objectFilter[filter[0]] = { $regex: filter[1], $options: "i" };
         query = query.find(objectFilter);
       }
-
       if (sort) {
         const objectSort = {};
         objectSort[sort[1]] = sort[0];
@@ -156,4 +158,5 @@ module.exports = {
   getDetailsProduct,
   deleteProduct,
   getAllProduct,
+  deleteManyProduct,
 };

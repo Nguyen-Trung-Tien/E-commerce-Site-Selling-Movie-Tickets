@@ -10,7 +10,6 @@ import {
 import TableComponent from "../TableComponent/TableComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import * as ProductService from "../../services/ProductService";
-import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as message from "../../component/Message/Message";
 import { getBase64 } from "../../utils";
@@ -18,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
+import { useMutationHooks } from "../../hooks/useMutationHooks";
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,7 +25,6 @@ const AdminProduct = () => {
   const [isPendingUpdate, setIsPendingUpdate] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -51,7 +50,7 @@ const AdminProduct = () => {
     countInStock: "",
   });
 
-  const mutation = useMutationHook((data) => {
+  const mutation = useMutationHooks((data) => {
     const { name, price, image, type, rating, description, countInStock } =
       data;
     const res = ProductService.createProduct({
@@ -66,15 +65,21 @@ const AdminProduct = () => {
     return res;
   });
 
-  const mutationUpdate = useMutationHook((data) => {
+  const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
     const res = ProductService.updateProduct(id, token, { ...rests });
     return res;
   });
 
-  const mutationDeleted = useMutationHook((data) => {
+  const mutationDeleted = useMutationHooks((data) => {
     const { id, token } = data;
     const res = ProductService.deleteProduct(id, token);
+    return res;
+  });
+
+  const mutationDeletedMany = useMutationHooks((data) => {
+    const { token, ...ids } = data;
+    const res = ProductService.deleteManyProduct(ids, token);
     return res;
   });
 
@@ -91,6 +96,13 @@ const AdminProduct = () => {
     isSuccess: isSuccessDeleted,
     isError: isErrorDeleted,
   } = mutationDeleted;
+
+  const {
+    data: dataDeletedMany,
+    isPending: isPendingDeletedMany,
+    isSuccess: isSuccessDeletedMany,
+    isError: isErrorDeletedMany,
+  } = mutationDeletedMany;
 
   const {
     data: dataUpdated,
@@ -120,20 +132,32 @@ const AdminProduct = () => {
   }, [form, stateProductDetails]);
 
   useEffect(() => {
-    if (rowSelected) {
+    if (rowSelected && isOpenDrawer) {
       setIsPendingUpdate(true);
       fetchGetDetailsProduct(rowSelected);
     }
-  }, [rowSelected]);
+  }, [rowSelected, isOpenDrawer]);
 
   const handleDetailsProduct = () => {
     setIsOpenDrawer(true);
+  };
+
+  const handleDeleteManyProducts = (ids) => {
+    mutationDeletedMany.mutate(
+      { ids: ids, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryProducts.refetch();
+        },
+      }
+    );
   };
 
   const queryProducts = useQuery({
     queryKey: ["products"],
     queryFn: getAllProduct,
   });
+
   const { isPending: isPendingProduct, data: products } = queryProducts;
 
   const renderAction = () => {
@@ -209,17 +233,6 @@ const AdminProduct = () => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    // render: (text) =>
-    //   searchedColumn === dataIndex ? (
-    //     // <Highlighter
-    //     //   highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-    //     //   searchWords={[searchText]}
-    //     //   autoEscape
-    //     //   textToHighlight={text ? text.toString() : ""}
-    //     // />
-    //   ) : (
-    //     text
-    //   ),
   });
 
   const columns = [
@@ -304,6 +317,14 @@ const AdminProduct = () => {
       message.error();
     }
   }, [isSuccessDeleted]);
+
+  useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
+      message.success();
+    } else if (isErrorDeletedMany) {
+      message.error();
+    }
+  }, [isSuccessDeletedMany]);
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
@@ -435,6 +456,7 @@ const AdminProduct = () => {
       </div>
       <div style={{ marginTop: "20px" }}>
         <TableComponent
+          handleDeleteMany={handleDeleteManyProducts}
           columns={columns}
           isPending={isPendingProduct}
           data={dataTable}
@@ -469,7 +491,7 @@ const AdminProduct = () => {
               rules={[{ required: true, message: "Please input your name!" }]}
             >
               <InputComponent
-                value={stateProductDetails["name"]}
+                value={stateProductDetails.name}
                 onChange={handleOnChange}
                 name="name"
               />

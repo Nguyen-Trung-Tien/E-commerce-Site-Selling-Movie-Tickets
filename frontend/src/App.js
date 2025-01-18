@@ -7,9 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import * as UserService from "./services/UserService";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "./redux/slides/userSlide";
-import axios from "axios";
 import Loading from "./component/LoadingComponent/Loading";
-import { useQuery } from "@tanstack/react-query";
 function App() {
   const dispatch = useDispatch();
   const [isPending, setIsPending] = useState(false);
@@ -34,6 +32,11 @@ function App() {
     return { decoded, storageData };
   };
 
+  const handleGetDetailsUser = async (id, token) => {
+    const res = await UserService.getDetailsUser(id, token);
+    dispatch(updateUser({ ...res?.data, access_token: token }));
+  };
+
   UserService.axiosJWT.interceptors.request.use(
     async (config) => {
       const currentTime = new Date();
@@ -48,11 +51,6 @@ function App() {
       return Promise.reject(err);
     }
   );
-
-  const handleGetDetailsUser = async (id, token) => {
-    const res = await UserService.getDetailsUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
-  };
 
   return (
     <div>
