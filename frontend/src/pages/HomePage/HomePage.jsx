@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import TypeProduct from "../../component/TypeProduct/TypeProduct";
 import {
   WrapperButtonMore,
@@ -13,6 +13,9 @@ import slider4 from "../../assets/images/slider4.jpg";
 import CardComponent from "../../component/CardComponent/CardComponent";
 import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
+import { useSelector } from "react-redux";
+import Loading from "../../component/LoadingComponent/Loading";
+import { useDebounce } from "../../hooks/useDebounce";
 
 const HomePage = () => {
   const arr = [
@@ -22,11 +25,30 @@ const HomePage = () => {
     "Phim điện ảnh",
   ];
 
-  const fetchProductsAll = async () => {
-    const res = await ProductService.getAllProduct();
-    console.log("Fetched products:", res);
-    return res;
+  const searchProduct = useSelector((state) => state?.product?.search);
+  const [stateProducts, setStateProducts] = useState([]);
+  const searchDebounce = useDebounce(searchProduct, 2000);
+  const [Pending, setPending] = useState(false);
+  const refSearch = useRef();
+  const fetchProductsAll = async (search) => {
+    // if (search.length > 0) {
+    // }
+    const res = await ProductService.getAllProduct(search);
+    if (search.length > 0 || refSearch.current) {
+      setStateProducts(res?.data);
+    } else {
+      return res;
+    }
   };
+
+  useEffect(() => {
+    if (refSearch.current) {
+      setPending(true);
+      fetchProductsAll(searchDebounce);
+    }
+    refSearch.current = true;
+    setPending(false);
+  }, [searchDebounce]);
 
   const { isPending, data: products } = useQuery({
     queryKey: ["products"],
@@ -34,14 +56,15 @@ const HomePage = () => {
     retry: 3,
     retryDelay: 1000,
   });
-
-  if (isPending) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (products?.data?.length > 0) {
+      setStateProducts(products?.data);
+    }
+  }, [products]);
 
   return (
-    <>
-      <div style={{ padding: "0 120px", background: "#efefef" }}>
+    <Loading isPending={isPending || Pending}>
+      <div style={{ width: "1270px", background: "#efefef", margin: "0 auto" }}>
         <WrapperTypeProduct>
           {arr.map((item) => (
             <TypeProduct name={item} key={item} />
@@ -57,47 +80,54 @@ const HomePage = () => {
       >
         <SliderComponent arrImages={[slider1, slider2, slider3, slider4]} />
       </div>
-      <WrapperProducts>
-        {products?.data?.map((product) => {
-          return (
-            <CardComponent
-              key={product._id}
-              description={product.description}
-              image={product.image}
-              name={product.name}
-              price={product.price}
-              rating={product.rating}
-              type={product.type}
-              discount={product.discount}
-              seller={product.seller}
-              countInStock={product.countInStock}
-            />
-          );
-        })}
-      </WrapperProducts>
+      <div className="body" style={{ width: "100%", background: "#efefef" }}>
+        <div
+          id="container"
+          style={{ height: "1000px", width: "1270px", margin: "0 auto" }}
+        >
+          <WrapperProducts>
+            {stateProducts?.map((product) => {
+              return (
+                <CardComponent
+                  key={product._id}
+                  description={product.description}
+                  image={product.image}
+                  name={product.name}
+                  price={product.price}
+                  rating={product.rating}
+                  type={product.type}
+                  discount={product.discount}
+                  seller={product.seller}
+                  countInStock={product.countInStock}
+                />
+              );
+            })}
+          </WrapperProducts>
 
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "20px",
-        }}
-      >
-        <WrapperButtonMore
-          textButton="Xem thêm"
-          type="outline"
-          styleButton={{
-            border: "1px solid rgb(11, 116, 229)",
-            color: "rgb(11, 116, 229)",
-            width: "240px",
-            height: "38px",
-            borderRadius: "4px",
-          }}
-          styleTextButton={{ fontWeight: "500", fontSize: "14px" }}
-        />
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
+            }}
+          >
+            <WrapperButtonMore
+              textButton="Xem thêm"
+              type="outline"
+              styleButton={{
+                border: "1px solid rgb(11, 116, 229)",
+                color: "rgb(11, 116, 229)",
+                width: "240px",
+                height: "38px",
+                borderRadius: "4px",
+              }}
+              styleTextButton={{ fontWeight: "500", fontSize: "14px" }}
+            />
+          </div>
+        </div>
       </div>
-    </>
+    </Loading>
   );
 };
 

@@ -10,8 +10,6 @@ import { Image } from "antd";
 import imageLogo from "../../assets/images/sign-in.png";
 import { useNavigate } from "react-router-dom";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-
-import * as message from "../../component/Message/Message";
 import * as UserService from "../../services/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../component/LoadingComponent/Loading";
