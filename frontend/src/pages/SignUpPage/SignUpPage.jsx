@@ -34,6 +34,11 @@ const SignUpPage = () => {
       message.error("Đăng ký thất bại");
     }
   }, [isSuccess, isError]);
+
+  const handleNavigateSignIn = () => {
+    navigate("/sign-in");
+  };
+
   const handleOnChangeEmail = (value) => {
     setEmail(value);
   };
@@ -52,10 +57,6 @@ const SignUpPage = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setIsShowConfirmPassword(!isShowConfirmPassword);
-  };
-
-  const handleNavigateSignIn = () => {
-    navigate("/sign-in");
   };
 
   const handleSignUp = () => {
@@ -93,7 +94,7 @@ const SignUpPage = () => {
           <div style={{ position: "relative", marginBottom: "10px" }}>
             <InputForm
               type={isShowPassword ? "text" : "password"}
-              placeholder="Mật khẩu"
+              placeholder="password"
               value={password}
               onChange={handleOnChangePassword}
             />
@@ -113,7 +114,7 @@ const SignUpPage = () => {
           <div style={{ position: "relative" }}>
             <InputForm
               type={isShowConfirmPassword ? "text" : "password"}
-              placeholder="Nhập lại mật khẩu"
+              placeholder="confirm password"
               value={confirmPassword}
               onChange={handleOnChangeConfirmPassword}
             />

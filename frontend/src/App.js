@@ -8,6 +8,8 @@ import * as UserService from "./services/UserService";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "./redux/slides/userSlide";
 import Loading from "./component/LoadingComponent/Loading";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 function App() {
   const dispatch = useDispatch();
   const [isPending, setIsPending] = useState(false);

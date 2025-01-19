@@ -3,29 +3,39 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const generalAccessToken = (payload) => {
-  const access_token = jwt.sign(
-    {
-      ...payload,
-    },
-    process.env.ACCESS_TOKEN,
-    {
-      expiresIn: "30s",
-    }
-  );
-  return access_token;
+  try {
+    const access_token = jwt.sign(
+      {
+        ...payload,
+      },
+      process.env.ACCESS_TOKEN,
+      {
+        expiresIn: "15m",
+      }
+    );
+    return access_token;
+  } catch (error) {
+    console.error("Error generating access token:", error.message);
+    throw new Error("Failed to generate access token");
+  }
 };
 
 const generalRefreshToken = (payload) => {
-  const refresh_token = jwt.sign(
-    {
-      ...payload,
-    },
-    process.env.REFRESH_TOKEN,
-    {
-      expiresIn: "365s",
-    }
-  );
-  return refresh_token;
+  try {
+    const refresh_token = jwt.sign(
+      {
+        ...payload,
+      },
+      process.env.REFRESH_TOKEN,
+      {
+        expiresIn: "365d",
+      }
+    );
+    return refresh_token;
+  } catch (error) {
+    console.error("Error generating refresh token:", error.message);
+    throw new Error("Failed to generate refresh token");
+  }
 };
 
 const refreshTokenJwtService = (token) => {

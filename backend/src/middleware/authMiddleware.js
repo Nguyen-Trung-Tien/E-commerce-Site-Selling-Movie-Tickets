@@ -23,20 +23,30 @@ const authMiddleware = (req, res, next) => {
 };
 
 const authUserMiddleware = (req, res, next) => {
-  const token = req.headers.token?.split(" ")[1];
+  const token = req.headers.token ? req.headers.token.split(" ")[1] : null;
+
+  if (!token) {
+    return res.status(403).json({
+      message: "Token is missing",
+      status: "ERR",
+    });
+  }
+
   const userId = req.params.id;
+
   jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
     if (err) {
-      return res.status(404).json({
-        message: "The authentication ",
+      return res.status(403).json({
+        message: "Authentication failed: Invalid token",
         status: "ERR",
       });
     }
+
     if (user?.isAdmin || user?.id === userId) {
       next();
     } else {
-      return res.status(404).json({
-        message: "The authentication ",
+      return res.status(403).json({
+        message: "Authentication failed: Insufficient permissions",
         status: "ERR",
       });
     }

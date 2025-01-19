@@ -20,20 +20,24 @@ import Loading from "../LoadingComponent/Loading";
 import { useEffect, useState } from "react";
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [userAvatar, setUserAvatar] = useState("");
   const [userName, setUserName] = useState("");
+
   const handleNavigateSignIn = () => {
     navigate("/sign-in");
   };
+
   const handleLogout = async () => {
     setLoading(true);
     await UserService.logoutUser();
     dispatch(resetUser());
     setLoading(false);
   };
+
   useEffect(() => {
     setLoading(true);
     setUserName(user?.name);
