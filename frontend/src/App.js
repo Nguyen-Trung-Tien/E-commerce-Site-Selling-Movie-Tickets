@@ -61,7 +61,11 @@ function App() {
           <Routes>
             {routes.map((route) => {
               const Page = route.page;
-              const isCheckAuth = !route.isPrivate || user.isAdmin;
+              const isCheckAuth =
+                !route.isPrivate ||
+                user.isAdmin ||
+                user.id ||
+                user.access_token;
               const Layout = route.isShowHeader ? DefaultComponent : Fragment;
               return (
                 <Route
