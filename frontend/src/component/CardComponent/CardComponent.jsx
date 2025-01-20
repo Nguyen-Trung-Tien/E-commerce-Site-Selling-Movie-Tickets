@@ -8,7 +8,6 @@ import {
   WrapperStyleTextSell,
 } from "./style";
 import { StarFilled } from "@ant-design/icons";
-
 const CardComponent = (props) => {
   const {
     name,
@@ -25,27 +24,11 @@ const CardComponent = (props) => {
   return (
     <WrapperCardStyle
       hoverable
-      style={{ width: 190 }}
+      style={{ width: 200 }}
       headStyle={{ width: "200px", height: "200px" }}
       bodyStyle={{ padding: "10px", marginTop: "-5px" }}
-      cover={
-        <img
-          alt="example"
-          src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-        />
-      }
+      cover={<img alt="example" src={image} />}
     >
-      {/* <img
-        src="logo"
-        style={{
-          width: "70px",
-          height: "14px",
-          position: "absolute",
-          top: -1,
-          left: -1,
-          borderTopLeftRadius: "5px",
-        }}
-      /> */}
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>
         <span style={{ marginRight: "10px" }}>
@@ -54,9 +37,9 @@ const CardComponent = (props) => {
         </span>
         <WrapperStyleTextSell>|đã bán {seller || 1000} vé</WrapperStyleTextSell>
         <WrapperPriceText>
-          <span style={{ marginRight: "10px" }}>{price}</span>
+          <span style={{ marginRight: "10px" }}>{price.toLocaleString()}</span>
 
-          <WrapperDiscountText>{discount || 5}%</WrapperDiscountText>
+          <WrapperDiscountText>-{discount || 5}%</WrapperDiscountText>
         </WrapperPriceText>
       </WrapperReportText>
     </WrapperCardStyle>

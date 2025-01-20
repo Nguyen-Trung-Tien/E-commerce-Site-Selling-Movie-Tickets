@@ -26,41 +26,29 @@ const HomePage = () => {
   ];
 
   const searchProduct = useSelector((state) => state?.product?.search);
-  const [stateProducts, setStateProducts] = useState([]);
   const searchDebounce = useDebounce(searchProduct, 2000);
   const [Pending, setPending] = useState(false);
-  const refSearch = useRef();
-  const fetchProductsAll = async (search) => {
-    // if (search.length > 0) {
-    // }
-    const res = await ProductService.getAllProduct(search);
-    if (search.length > 0 || refSearch.current) {
-      setStateProducts(res?.data);
-    } else {
-      return res;
-    }
+  const [limit, setLimit] = useState(5);
+  // const [page, setPage] = useState(6);
+
+  const fetchProductsAll = async (context) => {
+    const limit = context?.queryKey && context?.queryKey[1];
+    const search = context?.queryKey && context?.queryKey[2];
+    const res = await ProductService.getAllProduct(search, limit);
+    return res;
   };
 
-  useEffect(() => {
-    if (refSearch.current) {
-      setPending(true);
-      fetchProductsAll(searchDebounce);
-    }
-    refSearch.current = true;
-    setPending(false);
-  }, [searchDebounce]);
-
-  const { isPending, data: products } = useQuery({
-    queryKey: ["products"],
+  const {
+    isPending,
+    data: products,
+    isPreviousData,
+  } = useQuery({
+    queryKey: ["products", limit, searchDebounce],
     queryFn: fetchProductsAll,
     retry: 3,
     retryDelay: 1000,
+    keepPreviousData: true,
   });
-  useEffect(() => {
-    if (products?.data?.length > 0) {
-      setStateProducts(products?.data);
-    }
-  }, [products]);
 
   return (
     <Loading isPending={isPending || Pending}>
@@ -86,7 +74,7 @@ const HomePage = () => {
           style={{ height: "1000px", width: "1270px", margin: "0 auto" }}
         >
           <WrapperProducts>
-            {stateProducts?.map((product) => {
+            {products?.data?.map((product) => {
               return (
                 <CardComponent
                   key={product._id}
@@ -113,16 +101,29 @@ const HomePage = () => {
             }}
           >
             <WrapperButtonMore
-              textButton="Xem thêm"
+              textButton={isPreviousData ? "Load more " : "Xem thêm"}
               type="outline"
               styleButton={{
                 border: "1px solid rgb(11, 116, 229)",
-                color: "rgb(11, 116, 229)",
+                color: `${
+                  products?.total === products?.data?.length
+                    ? "#ccc"
+                    : "  rgb(11, 116, 229)"
+                }`,
                 width: "240px",
                 height: "38px",
                 borderRadius: "4px",
               }}
-              styleTextButton={{ fontWeight: "500", fontSize: "14px" }}
+              disabled={
+                products?.total === products?.data?.length ||
+                products?.totalPage === 1
+              }
+              size="large"
+              styleTextButton={{
+                fontWeight: "500",
+                color: (products?.total === products?.data?.length) & "#fff",
+              }}
+              onClick={() => setLimit((prev) => prev + 8)}
             />
           </div>
         </div>

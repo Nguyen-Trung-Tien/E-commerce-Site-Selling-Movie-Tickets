@@ -9,7 +9,7 @@ const TableComponent = (props) => {
     data: dataSource = [],
     isPending = false,
     columns = [],
-    handleDeleteManyProducts,
+    handleDeleteMany,
   } = props;
   const [rowSelectedKeys, setRowSelectedKeys] = useState([]);
   const newColumnExport = useMemo(() => {
@@ -20,20 +20,16 @@ const TableComponent = (props) => {
     onChange: (selectedRowKeys, selectedRows) => {
       setRowSelectedKeys(selectedRowKeys);
     },
-    // getCheckboxProps: (record) => ({
-    //   disabled: record.name === "Disabled User",
-    //   name: record.name,
-    // }),
   };
 
   const handleDeleteAll = () => {
-    handleDeleteManyProducts(rowSelectedKeys);
+    handleDeleteMany(rowSelectedKeys);
   };
 
   const exportExcel = () => {
     const excel = new Excel();
     excel
-      .addSheet("test")
+      .addSheet("")
       .addColumns(columns)
       .addDataSource(dataSource, {
         str2Percent: true,
