@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Checkbox } from "antd";
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import imag from "../../assets/images/test.jpg";
@@ -15,18 +15,59 @@ import {
 } from "./style";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { WrapperInputNumber } from "../../component/ProductDetailComponent/style";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  decreaseAmount,
+  increaseAmount,
+  removeAllOrderProduct,
+  removeOrderProduct,
+} from "../../redux/slides/orderSlide";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+  const [listChecked, setListChecked] = useState([]);
   const onChange = (e) => {
-    console.log("Checkbox changed:", e.target.checked);
+    if (listChecked.includes(e.target.value)) {
+      const newListChecked = listChecked.filter(
+        (item) => item !== e.target.value
+      );
+      setListChecked(newListChecked);
+    } else {
+      setListChecked([...listChecked, e.target.value]);
+    }
   };
 
-  const handleChangeCount = (action) => {};
+  const handleChangeCount = (type, idProduct) => {
+    if (type === "increase") {
+      dispatch(increaseAmount({ idProduct }));
+    } else {
+      dispatch(decreaseAmount({ idProduct }));
+    }
+  };
 
-  const handleOnChangeCheckAll = (e) => {};
+  const handleDeleteOrder = (idProduct) => {
+    dispatch(removeOrderProduct({ idProduct }));
+  };
 
+  const handleOnChangeCheckAll = (e) => {
+    if (e.target.checked) {
+      const newListChecked = [];
+      order?.orderItems?.forEach((item) => {
+        newListChecked.push(item?.product);
+      });
+      setListChecked(newListChecked);
+    } else {
+      setListChecked([]);
+    }
+  };
+
+  const handleRemoveAllOrder = () => {
+    if (listChecked?.length > 1) {
+      dispatch(removeAllOrderProduct({ listChecked }));
+    }
+    dispatch(removeAllOrderProduct({ listChecked }));
+  };
   return (
     <div style={{ background: "#f5f5fa", width: "100%", height: "100vh" }}>
       <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
@@ -35,7 +76,10 @@ const OrderPage = () => {
           <WrapperLeft>
             <WrapperStyleHeader>
               <span style={{ display: "inline-block", width: "390px" }}>
-                <Checkbox onChange={handleOnChangeCheckAll} />
+                <Checkbox
+                  onChange={handleOnChangeCheckAll}
+                  checked={listChecked?.length === order?.orderItems?.length}
+                />
                 <span style={{ marginLeft: "12px" }}>
                   Tất cả ({order?.orderItems?.length}) sản phẩm
                 </span>
@@ -57,7 +101,10 @@ const OrderPage = () => {
                 <span style={{ width: "120px", textAlign: "center" }}>
                   Thành tiền
                 </span>
-                <DeleteOutlined style={{ cursor: "pointer" }} />
+                <DeleteOutlined
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleRemoveAllOrder(order?.product)}
+                />
               </div>
             </WrapperStyleHeader>
             <WrapperListOrder>
@@ -69,52 +116,75 @@ const OrderPage = () => {
                         width: "390px",
                         display: "flex",
                         alignItems: "center",
-                        gap: "12px",
+                        gap: "4px",
                       }}
                     >
-                      <Checkbox onChange={onChange} />
+                      <Checkbox
+                        onChange={onChange}
+                        value={order?.product}
+                        checked={listChecked.includes(order?.product)}
+                      ></Checkbox>
                       <img
-                        src={imag}
-                        alt="Product"
+                        src={order?.image}
+                        alt="imag"
                         style={{
-                          width: "77px",
-                          height: "79px",
+                          width: "150px",
+                          height: "150px",
                           objectFit: "cover",
                         }}
                       />
-                      <div style={{ fontSize: "13px", color: "#242424" }}>
+                      <div
+                        style={{
+                          width: "260px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
                         {order?.name}
                       </div>
                     </div>
+                    <div style={{ fontSize: "13px", color: "#242424" }}></div>
                     <div
                       style={{
                         flex: 1,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        paddingRight: "20px",
                       }}
                     >
-                      <span style={{ width: "120px", textAlign: "center" }}>
+                      <span>
                         <span style={{ fontSize: "14px", color: "#242424" }}>
                           {order?.price}
                         </span>
-                        <WrapperPriceDiscount>
-                          {order?.amount}
-                        </WrapperPriceDiscount>
                       </span>
                       <WrapperCountOrder>
-                        <button onClick={() => handleChangeCount("decrease")}>
-                          <MinusOutlined style={{ fontSize: "12px" }} />
+                        <button
+                          style={{ border: "none", background: "transparent" }}
+                          onClick={() =>
+                            handleChangeCount("decrease", order?.product)
+                          }
+                        >
+                          <MinusOutlined
+                            style={{ fontSize: "12px", color: "#000" }}
+                          />
                         </button>
                         <WrapperInputNumber
                           defaultValue={order?.amount}
                           value={order?.amount}
                           size="small"
-                          onChange={onChange}
                           controls={false}
                         />
-                        <button onClick={() => handleChangeCount("increase")}>
+                        <button
+                          style={{
+                            border: "none",
+                            background: "transparent",
+                            cursor: "pointer",
+                          }}
+                          onClick={() =>
+                            handleChangeCount("increase", order?.product)
+                          }
+                        >
                           <PlusOutlined style={{ fontSize: "12px" }} />
                         </button>
                       </WrapperCountOrder>
@@ -128,7 +198,10 @@ const OrderPage = () => {
                       >
                         {order?.price * order?.amount}
                       </span>
-                      <DeleteOutlined style={{ cursor: "pointer" }} />
+                      <DeleteOutlined
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleDeleteOrder(order?.product)}
+                      />
                     </div>
                   </WrapperItemOrder>
                 );
