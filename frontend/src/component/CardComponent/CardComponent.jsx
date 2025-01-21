@@ -8,6 +8,7 @@ import {
   WrapperStyleTextSell,
 } from "./style";
 import { StarFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 const CardComponent = (props) => {
   const {
     name,
@@ -19,15 +20,22 @@ const CardComponent = (props) => {
     discount,
     seller,
     countInStock,
+    id,
   } = props;
+
+  const navigate = useNavigate();
+  const handleDetailsProduct = (id) => {
+    navigate(`/product-details/${id}`);
+  };
 
   return (
     <WrapperCardStyle
-      hoverable
+      overable
       style={{ width: 200 }}
       headStyle={{ width: "200px", height: "200px" }}
       bodyStyle={{ padding: "10px", marginTop: "-5px" }}
       cover={<img alt="example" src={image} />}
+      onClick={() => handleDetailsProduct(id)}
     >
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>
@@ -37,8 +45,7 @@ const CardComponent = (props) => {
         </span>
         <WrapperStyleTextSell>|đã bán {seller || 1000} vé</WrapperStyleTextSell>
         <WrapperPriceText>
-          <span style={{ marginRight: "10px" }}>{price.toLocaleString()}</span>
-
+          <span style={{ marginRight: "10px" }}>{price?.toLocaleString()}</span>
           <WrapperDiscountText>-{discount || 5}%</WrapperDiscountText>
         </WrapperPriceText>
       </WrapperReportText>

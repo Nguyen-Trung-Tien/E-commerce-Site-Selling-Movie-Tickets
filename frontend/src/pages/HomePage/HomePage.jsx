@@ -18,24 +18,23 @@ import Loading from "../../component/LoadingComponent/Loading";
 import { useDebounce } from "../../hooks/useDebounce";
 
 const HomePage = () => {
-  const arr = [
-    "Phim hành động",
-    "Phim hoạt hình",
-    "Phim Drama",
-    "Phim điện ảnh",
-  ];
-
+  const [typeProducts, setTypeProducts] = useState([]);
   const searchProduct = useSelector((state) => state?.product?.search);
-  const searchDebounce = useDebounce(searchProduct, 2000);
+  const searchDebounce = useDebounce(searchProduct, 500);
   const [Pending, setPending] = useState(false);
   const [limit, setLimit] = useState(5);
-  // const [page, setPage] = useState(6);
-
   const fetchProductsAll = async (context) => {
     const limit = context?.queryKey && context?.queryKey[1];
     const search = context?.queryKey && context?.queryKey[2];
     const res = await ProductService.getAllProduct(search, limit);
     return res;
+  };
+
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    if (res?.status === "OK") {
+      setTypeProducts(res?.data);
+    }
   };
 
   const {
@@ -46,15 +45,18 @@ const HomePage = () => {
     queryKey: ["products", limit, searchDebounce],
     queryFn: fetchProductsAll,
     retry: 3,
-    retryDelay: 1000,
+    retryDelay: 500,
     keepPreviousData: true,
   });
 
+  useEffect(() => {
+    fetchAllTypeProduct();
+  }, []);
   return (
     <Loading isPending={isPending || Pending}>
-      <div style={{ width: "1270px", background: "#efefef", margin: "0 auto" }}>
+      <div style={{ width: "1270px", background: "#fff  ", margin: "0 auto" }}>
         <WrapperTypeProduct>
-          {arr.map((item) => (
+          {typeProducts.map((item) => (
             <TypeProduct name={item} key={item} />
           ))}
         </WrapperTypeProduct>
@@ -62,7 +64,6 @@ const HomePage = () => {
       <div
         id="container"
         style={{
-          padding: "0 0px",
           width: "100%",
         }}
       >
@@ -87,6 +88,7 @@ const HomePage = () => {
                   discount={product.discount}
                   seller={product.seller}
                   countInStock={product.countInStock}
+                  id={product._id}
                 />
               );
             })}

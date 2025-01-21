@@ -84,7 +84,12 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         }}
       >
         <Col span={5}>
-          <WrapperTextHeader>GOOD-MOVIE</WrapperTextHeader>
+          <WrapperTextHeader
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          >
+            GOOD-MOVIE
+          </WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
           <Col span={13}>
@@ -146,7 +151,10 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             </WrapperHeaderAccount>
           </Loading>
           {!isHiddenCart && (
-            <div>
+            <div
+              onClick={() => navigate("/order")}
+              style={{ cursor: "pointer" }}
+            >
               <Badge count={4} size="small">
                 <ShoppingCartOutlined
                   style={{ fontSize: "30px", color: "#fff" }}

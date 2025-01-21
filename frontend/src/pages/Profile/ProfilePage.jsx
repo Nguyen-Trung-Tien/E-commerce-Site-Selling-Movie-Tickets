@@ -99,7 +99,7 @@ const ProfilePage = () => {
       <Loading isPending={isPending}>
         <WrapperContentProfile>
           <WrapperInput>
-            <WrapperLabel htmlFor="avatar">Avatar</WrapperLabel>
+            <WrapperLabel htmlFor="avatar">Ảnh </WrapperLabel>
             <WrapperUploadFile onChange={handleOnChangeAvatar} maxCount={1}>
               <Button icon={<UploadOutlined />}>Select File</Button>
             </WrapperUploadFile>

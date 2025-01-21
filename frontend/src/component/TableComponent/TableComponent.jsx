@@ -38,7 +38,7 @@ const TableComponent = (props) => {
   };
   return (
     <Loading isPending={isPending}>
-      {rowSelectedKeys.length > 0 && (
+      {rowSelectedKeys?.length > 0 && (
         <div
           style={{
             background: "#1d1ddd",
