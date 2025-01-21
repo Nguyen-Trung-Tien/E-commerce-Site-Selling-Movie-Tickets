@@ -27,15 +27,42 @@ const TableComponent = (props) => {
   };
 
   const exportExcel = () => {
-    const excel = new Excel();
-    excel
-      .addSheet("")
-      .addColumns(columns)
-      .addDataSource(dataSource, {
-        str2Percent: true,
-      })
-      .saveAs("Excel.xlsx");
+    try {
+      if (!dataSource || !newColumnExport) {
+        console.error("Missing data or columns for export");
+        return;
+      }
+
+      const excel = new Excel();
+      const exportColumns = newColumnExport.map((col) => ({
+        title: col.title,
+        dataIndex: col.dataIndex,
+        key: col.key || col.dataIndex,
+      }));
+
+      const exportData = dataSource.map((record) => {
+        const row = {};
+        exportColumns.forEach((col) => {
+          const value = record[col.dataIndex];
+          row[col.dataIndex] =
+            value !== undefined && value !== null ? String(value) : "";
+        });
+        return row;
+      });
+
+      excel
+        .addSheet("Sheet1")
+        .addColumns(exportColumns)
+        .addDataSource(exportData, {
+          str2Percent: false,
+          header: true,
+        })
+        .saveAs("Excel.xlsx");
+    } catch (error) {
+      console.error("Excel export failed:", error);
+    }
   };
+
   return (
     <Loading isPending={isPending}>
       {rowSelectedKeys?.length > 0 && (
@@ -52,7 +79,20 @@ const TableComponent = (props) => {
           Xóa tất cả
         </div>
       )}
-      <button onClick={exportExcel}>Export Excel</button>
+      <button
+        style={{
+          margin: "10px",
+          padding: "8px 16px",
+          background: "#1d1ddd",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+        onClick={exportExcel}
+      >
+        Export Excel
+      </button>
       <Table
         rowSelection={{
           type: selectionType,

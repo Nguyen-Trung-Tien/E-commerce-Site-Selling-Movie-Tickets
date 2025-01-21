@@ -84,6 +84,7 @@ const TypeProductPage = () => {
                     }
                   })
                   ?.map((product) => {
+                    console.log(product);
                     return (
                       <CardComponent
                         key={product?._id}
