@@ -22,9 +22,11 @@ export const WrapperListOrder = styled.div``;
 export const WrapperItemOrder = styled.div`
   display: flex;
   align-items: center;
-  background: #fff);
+  padding: 9px 16px;
+  background: #fff;
   margin-top: 12px;
 `;
+
 export const WrapperRight = styled.div`
   width: 320px;
   margin-left: 20px;
@@ -44,9 +46,47 @@ export const WrapperPriceDiscount = styled.span`
 export const WrapperCountOrder = styled.div`
   display: flex;
   align-items: center;
-  width: 84px;
+  width: 120px;
   border: 1px solid #ccc;
   border-radius: 4px;
+
+  .ant-input-number {
+    width: 40px;
+    border: none;
+    padding: 0;
+
+    .ant-input-number-handler-wrap {
+      display: none;
+    }
+
+    .ant-input-number-input {
+      text-align: center;
+      padding: 0;
+    }
+  }
+
+  button {
+    width: 40px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &:first-child {
+      border-right: 1px solid #ccc;
+    }
+
+    &:last-child {
+      border-left: 1px solid #ccc;
+    }
+  }
 `;
 
 export const WrapperInfo = styled.div`
@@ -55,7 +95,7 @@ export const WrapperInfo = styled.div`
   background: #fff;
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
-  with: 100%;
+  width: 100%;
 `;
 
 export const WrapperTotal = styled.div`

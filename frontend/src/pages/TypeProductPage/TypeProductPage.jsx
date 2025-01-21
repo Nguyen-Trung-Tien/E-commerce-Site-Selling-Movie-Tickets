@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
 import NavBarComponent from "../../component/NavBarComponent/NavBarComponent";
 import CardComponent from "../../component/CardComponent/CardComponent";
 import { Col, Pagination, Row } from "antd";
 import { WrapperNavbar, WrapperProducts } from "./style";
 import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import * as ProductService from "../../services/ProductService";
 import Loading from "../../component/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
@@ -12,23 +12,25 @@ import { useDebounce } from "../../hooks/useDebounce";
 const TypeProductPage = () => {
   const { state } = useLocation();
   const [products, setProducts] = useState([]);
-  const [pending, setPending] = useState(false);
+  const [pending, setPending] = useState(0);
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
   const [paginate, setPaginate] = useState({
-    page: 1,
+    page: 0,
     limit: 10,
-    total: 0,
+    total: 1,
   });
 
   const fetchProductType = async (type, page, limit) => {
     setPending(true);
-    const res = await ProductService.getProductType(type, page, limit);
+    const res = await ProductService.getProductType(type);
     if (res?.status === "OK") {
+      setPending(false);
       setProducts(res?.data);
-      setPaginate({ ...paginate, total: res?.totalPage });
+      setPaginate({ ...paginate, total: res?.data });
+    } else {
+      setPending(false);
     }
-    setPending(false);
   };
 
   useEffect(() => {
@@ -38,9 +40,8 @@ const TypeProductPage = () => {
   }, [state, paginate.page, paginate.limit]);
 
   const onChange = (current, pageSize) => {
-    setPaginate({ ...paginate, page: current, limit: pageSize });
+    setPaginate({ ...paginate, page: current - 1, limit: pageSize });
   };
-
   return (
     <Loading isPending={pending}>
       <div
@@ -83,29 +84,28 @@ const TypeProductPage = () => {
                       return pro;
                     }
                   })
-                  ?.map((product) => {
-                    console.log(product);
+                  .map((product) => {
                     return (
                       <CardComponent
-                        key={product?._id}
-                        countInStock={product?.countInStock}
-                        description={product?.description}
-                        image={product?.image}
-                        name={product?.name}
-                        price={product?.price}
-                        rating={product?.rating}
-                        type={product?.type}
-                        id={product?._id}
-                        discount={product?.discount}
-                        seller={product?.seller}
+                        key={product._id}
+                        description={product.description}
+                        image={product.image}
+                        name={product.name}
+                        price={product.price}
+                        rating={product.rating}
+                        type={product.type}
+                        discount={product.discount}
+                        seller={product.seller}
+                        countInStock={product.countInStock}
+                        id={product._id}
                       />
                     );
                   })}
               </WrapperProducts>
+
               <Pagination
-                current={paginate.page}
-                total={paginate.total}
-                pageSize={paginate.limit}
+                defaultCurrent={paginate?.page + 1}
+                total={paginate?.total}
                 onChange={onChange}
                 style={{ textAlign: "center", marginTop: "10px" }}
               />

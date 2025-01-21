@@ -24,7 +24,8 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const user = useSelector((state) => state.user);
-  const [loading, setLoading] = useState(false);
+  const order = useSelector((state) => state.order);
+  const [isPending, setIsPending] = useState(false);
   const [userAvatar, setUserAvatar] = useState("");
   const [userName, setUserName] = useState("");
 
@@ -33,17 +34,17 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   };
 
   const handleLogout = async () => {
-    setLoading(true);
+    setIsPending(true);
     await UserService.logoutUser();
     dispatch(resetUser());
-    setLoading(false);
+    setIsPending(false);
   };
 
   useEffect(() => {
-    setLoading(true);
+    setIsPending(true);
     setUserName(user?.name);
     setUserAvatar(user?.avatar);
-    setLoading(false);
+    setIsPending(false);
   }, [user?.name, user?.avatar]);
 
   const content = (
@@ -107,7 +108,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           span={6}
           style={{ display: "flex", gap: "30px", alignItems: "center" }}
         >
-          <Loading isPending={loading}>
+          <Loading isPending={isPending}>
             <WrapperHeaderAccount>
               {userAvatar ? (
                 <img
@@ -155,7 +156,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               onClick={() => navigate("/order")}
               style={{ cursor: "pointer" }}
             >
-              <Badge count={4} size="small">
+              <Badge count={order?.orderItems?.length} size="small">
                 <ShoppingCartOutlined
                   style={{ fontSize: "30px", color: "#fff" }}
                 />

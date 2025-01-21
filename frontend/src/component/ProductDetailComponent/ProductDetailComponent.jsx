@@ -14,13 +14,18 @@ import {
   WrapperStyleNameProduct,
   WrapperStyleTextSell,
 } from "./style";
+import { addOrderProduct } from "../../redux/slides/orderSlide";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../LoadingComponent/Loading";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 const ProductDetailComponent = ({ idProduct }) => {
-  const [numProduct, setNumProduct] = useState();
+  const [numProduct, setNumProduct] = useState(1);
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const onChange = (value) => {
     setNumProduct(Number(value));
   };
@@ -41,9 +46,28 @@ const ProductDetailComponent = ({ idProduct }) => {
 
   const handleChangeCount = (type) => {
     if (type === "increase") {
-      setNumProduct(numProduct + 1);
+      setNumProduct((prev) => prev + 1);
     } else {
-      setNumProduct(numProduct - 1);
+      setNumProduct((prev) => (prev > 1 ? prev - 1 : 1));
+    }
+  };
+
+  const handleAddOrderProduct = () => {
+    if (!user?.id) {
+      navigate("/sign-in", { state: location?.pathname });
+    } else if (productDetails && numProduct) {
+      dispatch(
+        addOrderProduct({
+          orderItems: {
+            name: productDetails?.name,
+            amount: numProduct,
+            image: productDetails?.image,
+            price: productDetails?.price,
+            product: productDetails?._id,
+            countInStock: productDetails?.countInStock,
+          },
+        })
+      );
     }
   };
   return (
@@ -154,6 +178,7 @@ const ProductDetailComponent = ({ idProduct }) => {
           </div>
           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             <ButtonComponent
+              onClick={handleAddOrderProduct}
               size={40}
               styleButton={{
                 background: "rgb(255,57, 69)",

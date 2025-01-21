@@ -15,8 +15,10 @@ import {
 } from "./style";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { WrapperInputNumber } from "../../component/ProductDetailComponent/style";
+import { useSelector } from "react-redux";
 
-const OrderPage = ({ count = 1 }) => {
+const OrderPage = () => {
+  const order = useSelector((state) => state.order);
   const onChange = (e) => {
     console.log("Checkbox changed:", e.target.checked);
   };
@@ -34,74 +36,103 @@ const OrderPage = ({ count = 1 }) => {
             <WrapperStyleHeader>
               <span style={{ display: "inline-block", width: "390px" }}>
                 <Checkbox onChange={handleOnChangeCheckAll} />
-                <span>Tất cả ({count}) sản phẩm </span>
+                <span style={{ marginLeft: "12px" }}>
+                  Tất cả ({order?.orderItems?.length}) sản phẩm
+                </span>
               </span>
-              <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
-                <span>Đơn giá</span>
-                <span>Số lượng</span>
-                <span>Thành tiền</span>
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingRight: "20px",
+                }}
+              >
+                <span style={{ width: "120px", textAlign: "center" }}>
+                  Đơn giá
+                </span>
+                <span style={{ width: "120px", textAlign: "center" }}>
+                  Số lượng
+                </span>
+                <span style={{ width: "120px", textAlign: "center" }}>
+                  Thành tiền
+                </span>
                 <DeleteOutlined style={{ cursor: "pointer" }} />
               </div>
             </WrapperStyleHeader>
             <WrapperListOrder>
-              <WrapperItemOrder>
-                <div
-                  style={{
-                    width: "390px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Checkbox />
-                  <img
-                    src={imag}
-                    alt="Product"
-                    style={{
-                      width: "77px",
-                      height: "79px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <div></div>
-                </div>
-                <div
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "end",
-                  }}
-                >
-                  <span>
-                    <span style={{ fontSize: "13px", color: "#242424" }}>
-                      <WrapperPriceDiscount></WrapperPriceDiscount>
-                    </span>
-                    <WrapperCountOrder>
-                      <button>
-                        <MinusOutlined
-                          style={{ color: "#000", fontSize: "20px" }}
-                        />
-                      </button>
-                      <WrapperInputNumber
-                        defaultValue={1}
-                        min={1}
-                        max={10}
-                        onChange={onChange}
+              {order?.orderItems?.map((order, index) => {
+                return (
+                  <WrapperItemOrder key={index}>
+                    <div
+                      style={{
+                        width: "390px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                      }}
+                    >
+                      <Checkbox onChange={onChange} />
+                      <img
+                        src={imag}
+                        alt="Product"
+                        style={{
+                          width: "77px",
+                          height: "79px",
+                          objectFit: "cover",
+                        }}
                       />
-                      <button
-                        style={{ border: "none", background: "transparent" }}
-                      >
-                        <PlusOutlined
-                          style={{ color: "#000", fontSize: "20px" }}
+                      <div style={{ fontSize: "13px", color: "#242424" }}>
+                        {order?.name}
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        paddingRight: "20px",
+                      }}
+                    >
+                      <span style={{ width: "120px", textAlign: "center" }}>
+                        <span style={{ fontSize: "14px", color: "#242424" }}>
+                          {order?.price}
+                        </span>
+                        <WrapperPriceDiscount>
+                          {order?.amount}
+                        </WrapperPriceDiscount>
+                      </span>
+                      <WrapperCountOrder>
+                        <button onClick={() => handleChangeCount("decrease")}>
+                          <MinusOutlined style={{ fontSize: "12px" }} />
+                        </button>
+                        <WrapperInputNumber
+                          defaultValue={order?.amount}
+                          value={order?.amount}
+                          size="small"
+                          onChange={onChange}
+                          controls={false}
                         />
-                      </button>
-                    </WrapperCountOrder>
-                  </span>
-                  <DeleteOutlined
-                    style={{ cursor: "pointer", marginLeft: "10px" }}
-                  />
-                </div>
-              </WrapperItemOrder>
+                        <button onClick={() => handleChangeCount("increase")}>
+                          <PlusOutlined style={{ fontSize: "12px" }} />
+                        </button>
+                      </WrapperCountOrder>
+                      <span
+                        style={{
+                          width: "120px",
+                          textAlign: "center",
+                          color: "rgb(254, 56, 52)",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {order?.price * order?.amount}
+                      </span>
+                      <DeleteOutlined style={{ cursor: "pointer" }} />
+                    </div>
+                  </WrapperItemOrder>
+                );
+              })}
             </WrapperListOrder>
           </WrapperLeft>
           <WrapperRight>
@@ -137,9 +168,7 @@ const OrderPage = ({ count = 1 }) => {
                       fontSize: "14px",
                       fontWeight: "bold",
                     }}
-                  >
-                    0₫
-                  </span>
+                  ></span>
                 </div>
                 <div
                   style={{
@@ -162,12 +191,24 @@ const OrderPage = ({ count = 1 }) => {
               </WrapperInfo>
               <WrapperTotal>
                 <span>Tổng tiền</span>
-                <span style={{ display: "flex", flexDirection: "column" }}>
+                <span
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                  }}
+                >
                   <span
-                    style={{ color: "rgb(254, 56, 52)", fontSize: "24px" }}
-                  ></span>
+                    style={{
+                      color: "rgb(254, 56, 52)",
+                      fontSize: "24px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    420,000₫
+                  </span>
                   <span style={{ color: "#000", fontSize: "14px" }}>
-                    đã bao gồm
+                    (Đã bao gồm VAT)
                   </span>
                 </span>
               </WrapperTotal>
