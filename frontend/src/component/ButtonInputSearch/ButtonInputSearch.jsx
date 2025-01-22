@@ -11,6 +11,7 @@ const ButtonInputSearch = (props) => {
     backgroundColorInput = "#fff",
     backgroundColorButton = "rgb(13,95, 182)",
     ColorButton = "#fff",
+    ...restProps
   } = props;
   return (
     <div style={{ display: "flex", gap: "2px" }}>
@@ -18,7 +19,7 @@ const ButtonInputSearch = (props) => {
         placeholder={placeholder}
         size={size}
         style={{ backgroundColor: backgroundColorInput }}
-        {...props}
+        {...restProps}
       />
       <ButtonComponent
         size={size}

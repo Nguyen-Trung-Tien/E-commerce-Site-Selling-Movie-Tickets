@@ -27,6 +27,8 @@ const AdminProduct = () => {
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [typeSelect, setTypeSelect] = useState("");
   const searchInput = useRef(null);
+  const user = useSelector((state) => state.user);
+  const [form] = Form.useForm();
   const [stateProduct, setStateProduct] = useState({
     name: "",
     price: "",
@@ -37,8 +39,6 @@ const AdminProduct = () => {
     countInStock: "",
     newType: "",
   });
-  const user = useSelector((state) => state.user);
-  const [form] = Form.useForm();
 
   const [stateProductDetails, setStateProductDetails] = useState({
     name: "",
@@ -48,11 +48,21 @@ const AdminProduct = () => {
     rating: "",
     description: "",
     countInStock: "",
+    discount: "",
   });
 
   const mutation = useMutationHooks((data) => {
-    const { name, price, image, type, rating, description, countInStock } =
-      data;
+    const {
+      name,
+      price,
+      image,
+      type,
+      rating,
+      description,
+      countInStock,
+      discount,
+    } = data;
+
     const res = ProductService.createProduct({
       name,
       price,
@@ -61,6 +71,7 @@ const AdminProduct = () => {
       countInStock,
       rating,
       description,
+      discount,
     });
     return res;
   });
@@ -84,7 +95,7 @@ const AdminProduct = () => {
   });
 
   const getAllProduct = async () => {
-    const res = await ProductService.getAllProduct();
+    const res = await ProductService.getAllProduct("", 10);
     return res;
   };
 
@@ -127,6 +138,7 @@ const AdminProduct = () => {
         rating: res?.data?.rating,
         description: res?.data?.description,
         countInStock: res?.data?.countInStock,
+        discount: res?.data?.discount,
       });
     }
     setIsPendingUpdate(false);
@@ -378,6 +390,7 @@ const AdminProduct = () => {
       rating: "",
       description: "",
       countInStock: "",
+      discount: "",
     });
     form.resetFields();
   };
@@ -409,8 +422,9 @@ const AdminProduct = () => {
       description: stateProduct.description,
       countInStock: stateProduct.countInStock,
       newType: stateProduct.newType,
+      discount: stateProduct.discount,
     };
-    mutation.mutate(stateProduct, {
+    mutation.mutate(params, {
       onSettled: () => {
         queryProducts.refetch();
       },
@@ -433,10 +447,10 @@ const AdminProduct = () => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-    setStateProduct({ ...stateProduct, image: file.preview });
+    setStateProductDetails({ ...stateProductDetails, image: file.preview });
   };
 
-  const handleOnChangeAvatarDetails = async ({ fileList }) => {
+  const handleOnChangeImageDetails = async ({ fileList }) => {
     const file = fileList[0];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -515,7 +529,7 @@ const AdminProduct = () => {
               rules={[{ required: true, message: "Please input your name!" }]}
             >
               <InputComponent
-                value={stateProductDetails.name}
+                value={stateProductDetails["name"]}
                 onChange={handleOnChange}
                 name="name"
               />
@@ -529,7 +543,7 @@ const AdminProduct = () => {
                 name="type"
                 // defaultValue="lucy"
                 // style={{ width: 120 }}
-                value={stateProduct.type}
+                value={stateProduct["type"]}
                 onChange={handleChangeSelect}
                 options={renderOptions(typeProduct?.data?.data)}
               />
@@ -549,7 +563,7 @@ const AdminProduct = () => {
                 rules={[{ required: true, message: "Please input your type!" }]}
               >
                 <InputComponent
-                  value={stateProduct.newType}
+                  value={stateProduct["newType"]}
                   onChange={handleOnChange}
                   name="newType"
                 />
@@ -609,6 +623,20 @@ const AdminProduct = () => {
                 value={stateProduct.rating}
                 onChange={handleOnChange}
                 name="rating"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Discount"
+              name="discount"
+              rules={[
+                { required: true, message: "Please input your of product!" },
+              ]}
+            >
+              <InputComponent
+                value={stateProduct.discount}
+                onChange={handleOnChange}
+                name="discount"
               />
             </Form.Item>
             <Form.Item
@@ -682,7 +710,7 @@ const AdminProduct = () => {
               rules={[{ required: true, message: "Please input your type!" }]}
             >
               <InputComponent
-                value={stateProductDetails.type}
+                value={stateProductDetails["type"]}
                 onChange={handleOnChangeDetails}
                 name="type"
               />
@@ -748,6 +776,20 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
+              label="Discount"
+              name="discount"
+              rules={[
+                { required: true, message: "Please input your of product!" },
+              ]}
+            >
+              <InputComponent
+                value={stateProductDetails.discount}
+                onChange={handleOnChangeDetails}
+                name="discount"
+              />
+            </Form.Item>
+
+            <Form.Item
               label="Image"
               name="image"
               rules={[
@@ -755,7 +797,7 @@ const AdminProduct = () => {
               ]}
             >
               <WrapperUploadFile
-                onChange={handleOnChangeAvatarDetails}
+                onChange={handleOnChangeImageDetails}
                 maxCount={1}
               >
                 <Button>Select File</Button>

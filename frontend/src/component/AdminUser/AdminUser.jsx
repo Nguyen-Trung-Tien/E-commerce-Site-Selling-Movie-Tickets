@@ -4,7 +4,6 @@ import { Button, Form, Space } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
-  PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
@@ -24,9 +23,7 @@ const AdminUser = () => {
   const [isPendingUpdate, setIsPendingUpdate] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
-
   const searchInput = useRef(null);
-
   const user = useSelector((state) => state.user);
   const [form] = Form.useForm();
 
@@ -355,7 +352,6 @@ const AdminUser = () => {
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
-
       <div style={{ marginTop: "20px" }}>
         <TableComponent
           handleDeleteMany={handleDeleteManyUsers}
@@ -393,7 +389,7 @@ const AdminUser = () => {
               rules={[{ required: true, message: "Please input your name!" }]}
             >
               <InputComponent
-                value={stateUserDetails.name}
+                value={stateUserDetails["name"]}
                 onChange={handleOnChangeDetails}
                 name="name"
               />
@@ -405,7 +401,7 @@ const AdminUser = () => {
               rules={[{ required: true, message: "Please input your email!" }]}
             >
               <InputComponent
-                value={stateUserDetails.email}
+                value={stateUserDetails["email"]}
                 onChange={handleOnChangeDetails}
                 name="email"
               />
@@ -417,7 +413,7 @@ const AdminUser = () => {
               rules={[{ required: true, message: "Please input your  phone!" }]}
             >
               <InputComponent
-                value={stateUserDetails.countInStock}
+                value={stateUserDetails.phone}
                 onChange={handleOnChangeDetails}
                 name="phone"
               />
@@ -431,25 +427,27 @@ const AdminUser = () => {
               ]}
             >
               <InputComponent
-                value={stateUserDetails.email}
+                value={stateUserDetails.address}
                 onChange={handleOnChangeDetails}
                 name="address"
               />
             </Form.Item>
 
             <Form.Item
-              label="Image"
-              name="image"
-              rules={[{ required: true, message: "Please input your  image!" }]}
+              label="Avatar"
+              name="avatar"
+              rules={[
+                { required: true, message: "Please input your of avatar!" },
+              ]}
             >
               <WrapperUploadFile
                 onChange={handleOnChangeAvatarDetails}
                 maxCount={1}
               >
                 <Button>Select File</Button>
-                {stateUserDetails?.image && (
+                {stateUserDetails?.avatar && (
                   <img
-                    src={stateUserDetails?.image}
+                    src={stateUserDetails?.avatar}
                     style={{
                       width: "60px",
                       height: "60px",
@@ -457,7 +455,7 @@ const AdminUser = () => {
                       objectFit: "cover",
                       marginLeft: "10px",
                     }}
-                    alt="ImageProduct"
+                    alt="avatar"
                   />
                 )}
               </WrapperUploadFile>
@@ -472,7 +470,6 @@ const AdminUser = () => {
         </Loading>
       </DrawerComponent>
       <ModalComponent
-        forceRender
         title="Xóa người dùng"
         open={isModalOpenDelete}
         onCancel={handleCancelDelete}

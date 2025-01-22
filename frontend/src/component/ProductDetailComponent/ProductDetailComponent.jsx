@@ -20,6 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../LoadingComponent/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { convertPrice } from "../../utils";
 const ProductDetailComponent = ({ idProduct }) => {
   const [numProduct, setNumProduct] = useState(1);
   const user = useSelector((state) => state.user);
@@ -33,8 +34,16 @@ const ProductDetailComponent = ({ idProduct }) => {
   const fetchGetDetailsProduct = async (context) => {
     const id = context?.queryKey && context?.queryKey[1];
     if (id) {
-      const res = await ProductService?.getDetailsProduct(id);
+      const res = await ProductService.getDetailsProduct(id);
       return res.data;
+    }
+  };
+
+  const handleChangeCount = (type) => {
+    if (type === "increase") {
+      setNumProduct(numProduct + 1);
+    } else {
+      setNumProduct(numProduct - 1);
     }
   };
 
@@ -44,18 +53,10 @@ const ProductDetailComponent = ({ idProduct }) => {
     enabled: !!idProduct,
   });
 
-  const handleChangeCount = (type) => {
-    if (type === "increase") {
-      setNumProduct((prev) => prev + 1);
-    } else {
-      setNumProduct((prev) => (prev > 1 ? prev - 1 : 1));
-    }
-  };
-
   const handleAddOrderProduct = () => {
     if (!user?.id) {
       navigate("/sign-in", { state: location?.pathname });
-    } else if (productDetails && numProduct) {
+    } else {
       dispatch(
         addOrderProduct({
           orderItems: {
@@ -64,7 +65,6 @@ const ProductDetailComponent = ({ idProduct }) => {
             image: productDetails?.image,
             price: productDetails?.price,
             product: productDetails?._id,
-            countInStock: productDetails?.countInStock,
           },
         })
       );
@@ -127,7 +127,7 @@ const ProductDetailComponent = ({ idProduct }) => {
           </div>
           <WrapperPriceProduct>
             <WrapperPriceTextProduct>
-              {productDetails?.price}
+              {convertPrice(productDetails?.price)}
             </WrapperPriceTextProduct>
           </WrapperPriceProduct>
           <WrapperAddressPriceTextProduct>
@@ -187,7 +187,7 @@ const ProductDetailComponent = ({ idProduct }) => {
                 border: "none",
                 borderRadius: "4px",
               }}
-              textButton={"Chọn mua"}
+              textButton={"Mua ngay"}
               styleTextButton={{
                 color: "#fff",
                 fontSize: "15px",
@@ -203,7 +203,7 @@ const ProductDetailComponent = ({ idProduct }) => {
                 border: "1px solid rgb(13,92,182)",
                 borderRadius: "4px",
               }}
-              textButton={"Mua trả sau"}
+              textButton={"Trả sau"}
               styleTextButton={{
                 color: "rgb(13,92,182)",
                 fontSize: "15px",

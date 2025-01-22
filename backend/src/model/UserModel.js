@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    city: {
+      type: String,
+    },
     avatar: {
       type: String,
     },

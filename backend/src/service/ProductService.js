@@ -1,13 +1,21 @@
 const Product = require("../model/ProductModel");
 const createProduct = (newProduct) => {
   return new Promise(async (resolve, reject) => {
-    const { name, image, type, countInStock, price, rating, description } =
-      newProduct;
+    const {
+      name,
+      image,
+      type,
+      countInStock,
+      price,
+      rating,
+      description,
+      discount,
+    } = newProduct;
     try {
       const checkProduct = await Product.findOne({
         name: name,
       });
-      if (checkProduct !== null) {
+      if (checkProduct === null) {
         resolve({
           status: "OK",
           message: "The name of product is already",
@@ -21,6 +29,7 @@ const createProduct = (newProduct) => {
         price,
         rating,
         description,
+        discount,
       });
       if (newProduct) {
         resolve({
@@ -125,29 +134,62 @@ const getDetailsProduct = (id) => {
 const getAllProduct = (limit, page, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let allProduct = [];
       const totalProduct = await Product.countDocuments();
-      let query = Product.find();
       if (filter) {
-        const objectFilter = {};
-        objectFilter[filter[0]] = { $regex: filter[1], $options: "i" };
-        query = query.find(objectFilter);
+        const label = filter[0];
+        const allObjectFilter = await Product.find({
+          [label]: { $regex: filter[1] },
+        })
+          .limit(limit)
+          .skip(page * limit);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: allObjectFilter,
+          total: totalProduct,
+          pageCurrent: page + 1,
+          totalPage: Math.ceil(totalProduct / limit),
+        });
       }
+
       if (sort) {
         const objectSort = {};
         objectSort[sort[1]] = sort[0];
-        query = query.sort(objectSort);
+        allProduct = await Product.find()
+          .limit(limit)
+          .skip(page * limit)
+          .sort(objectSort);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: allProduct,
+          total: totalProduct,
+          pageCurrent: page + 1,
+          totalPage: Math.ceil(totalProduct / limit),
+        });
       }
-      const allProduct = await query.limit(limit).skip(page * limit);
-      resolve({
-        status: "OK",
-        message: "SUCCESS",
-        data: allProduct,
-        total: totalProduct,
-        pageCurrent: page + 1,
-        totalPage: Math.ceil(totalProduct / limit),
-      });
+
+      if (!limit) {
+        allProduct = await Product.find();
+      } else {
+        allProduct = await Product.find()
+          .limit(limit)
+          .skip(page * limit);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: allProduct,
+          total: totalProduct,
+          pageCurrent: page + 1,
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
     } catch (e) {
-      reject(e);
+      reject({
+        status: "ERROR",
+        message: e.message,
+      });
     }
   });
 };

@@ -98,7 +98,6 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               size="large"
               textButton="Tìm kiếm"
               placeholder="Tìm kiếm phim của bạn..."
-              enterButton
               onChange={onSearch}
             />
           </Col>
