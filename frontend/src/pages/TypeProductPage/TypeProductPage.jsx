@@ -73,34 +73,28 @@ const TypeProductPage = () => {
             >
               <WrapperProducts>
                 {products
-                  ?.filter((pro) => {
-                    if (searchDebounce === "") {
-                      return pro;
-                    } else if (
+                  ?.filter(
+                    (pro) =>
+                      searchDebounce === "" ||
                       pro?.name
                         ?.toLowerCase()
                         ?.includes(searchDebounce?.toLowerCase())
-                    ) {
-                      return pro;
-                    }
-                  })
-                  .map((product) => {
-                    return (
-                      <CardComponent
-                        key={product._id}
-                        description={product.description}
-                        image={product.image}
-                        name={product.name}
-                        price={product.price}
-                        rating={product.rating}
-                        type={product.type}
-                        discount={product.discount}
-                        seller={product.seller}
-                        countInStock={product.countInStock}
-                        id={product._id}
-                      />
-                    );
-                  })}
+                  )
+                  .map((product) => (
+                    <CardComponent
+                      key={product._id}
+                      description={product.description}
+                      image={product.image}
+                      name={product.name}
+                      price={product.price}
+                      rating={product.rating}
+                      type={product.type}
+                      discount={product.discount}
+                      seller={product.seller}
+                      countInStock={product.countInStock}
+                      id={product._id}
+                    />
+                  ))}
               </WrapperProducts>
 
               <Pagination

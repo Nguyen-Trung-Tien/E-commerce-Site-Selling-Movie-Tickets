@@ -95,7 +95,7 @@ const AdminProduct = () => {
   });
 
   const getAllProduct = async () => {
-    const res = await ProductService.getAllProduct("", 10);
+    const res = await ProductService.getAllProduct("", 100);
     return res;
   };
 
