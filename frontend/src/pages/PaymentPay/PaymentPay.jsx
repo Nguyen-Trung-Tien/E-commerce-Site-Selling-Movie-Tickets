@@ -9,7 +9,10 @@ import {
 } from "./style";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { selectedOrder } from "../../redux/slides/orderSlide";
+import {
+  removeAllOrderProduct,
+  selectedOrder,
+} from "../../redux/slides/orderSlide";
 import { convertPrice } from "../../utils";
 import ModalComponent from "../../component/ModalComponent/ModalComponent";
 import InputComponent from "../../component/InputComponent/InputComponent";
@@ -19,6 +22,7 @@ import * as OrderService from "../../services/OrderService";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as message from "../../component/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
+import { useNavigate } from "react-router-dom";
 
 const PaymentPage = () => {
   const order = useSelector((state) => state.order);
@@ -26,7 +30,7 @@ const PaymentPage = () => {
   const dispatch = useDispatch();
   const [delivery, setDelivery] = useState();
   const [payment, setPayment] = useState();
-
+  const navigate = useNavigate();
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
@@ -61,7 +65,7 @@ const PaymentPage = () => {
 
   const priceDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      return total + dispatch?.price * cur?.amount;
+      return total + cur?.discount * cur?.amount;
     }, 0);
     if (Number(result)) {
       return result;
@@ -78,11 +82,13 @@ const PaymentPage = () => {
       return 30000;
     }
   }, [priceMemo]);
+
   const totalPriceMemo = useMemo(() => {
     return (
       Number(priceMemo) - Number(priceDiscountMemo) + Number(deliveryPriceMemo)
     );
-  });
+  }, [priceMemo, priceDiscountMemo, deliveryPriceMemo]);
+
   const handleAddOrder = () => {
     if (
       user?.access_token &&
@@ -105,7 +111,7 @@ const PaymentPage = () => {
           paymentMethod: payment,
           itemsPrice: priceMemo,
           shippingPrice: deliveryPriceMemo,
-          totalPrice: priceMemo + deliveryPriceMemo,
+          totalPrice: totalPriceMemo,
           user: user?.id,
         },
         {
@@ -138,7 +144,20 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (isSuccess && dataAdd?.status === "OK") {
+      // const arrayOrdered = [];
+      // order?.orderItemsSelected?.forEach((element) => {
+      //   arrayOrdered.push(element.product);
+      // });
+      // dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
       message.success("Đặt thành công");
+      navigate("/orderSuccess", {
+        state: {
+          delivery,
+          payment,
+          orders: order?.orderItemsSelected,
+          totalPrice: totalPriceMemo,
+        },
+      });
     } else if (isError) {
       message.error();
     }
@@ -208,7 +227,7 @@ const PaymentPage = () => {
                       </span>
                       Giao hàng tiết kiệm
                     </Radio>
-                    <Radio value="fast">
+                    <Radio value="go_jek">
                       <span style={{ color: "#ea8500", fontWeight: "bold" }}>
                         GO_JEK
                       </span>

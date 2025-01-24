@@ -1,4 +1,5 @@
 const Order = require("../model/OderProduct");
+
 const createOrder = (newOrder) => {
   return new Promise(async (resolve, reject) => {
     const {
@@ -11,8 +12,8 @@ const createOrder = (newOrder) => {
       address,
       city,
       phone,
+      user, // Ensure user is included in newOrder
     } = newOrder;
-
     try {
       const createdOrder = await Order.create({
         orderItems,
@@ -26,7 +27,7 @@ const createOrder = (newOrder) => {
         itemsPrice,
         shippingPrice,
         totalPrice,
-        user: user,
+        user,
       });
       if (createdOrder) {
         resolve({
@@ -36,7 +37,10 @@ const createOrder = (newOrder) => {
         });
       }
     } catch (e) {
-      reject(e);
+      reject({
+        status: "ERR",
+        message: e.message,
+      });
     }
   });
 };

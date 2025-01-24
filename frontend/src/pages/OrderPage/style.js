@@ -108,3 +108,16 @@ export const WrapperTotal = styled.div`
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
 `;
+export const WrapperStyleHeaderDelivery = styled.div`
+  background-color: rgb(255, 255, 255);
+  padding: 9px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  span {
+    color: rgb(36, 36, 36);
+    font-weight: 400;
+    font-size: 14px;
+  }
+  margin-bottom: 4px;
+`;

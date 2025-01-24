@@ -10,6 +10,7 @@ import {
   WrapperTotal,
   WrapperItemOrder,
   WrapperCountOrder,
+  WrapperStyleHeaderDelivery,
 } from "./style";
 import ButtonComponent from "../../component/ButtonComponent/ButtonComponent";
 import { WrapperInputNumber } from "../../component/ProductDetailComponent/style";
@@ -30,6 +31,7 @@ import Loading from "../../component/LoadingComponent/Loading";
 import * as message from "../../component/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
 import { useNavigate } from "react-router-dom";
+import StepComponent from "../../component/StepComponent/StepComponent";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
@@ -182,12 +184,31 @@ const OrderPage = () => {
     });
   };
 
+  const itemsDelivery = [
+    {
+      title: "0VND",
+      description: "",
+    },
+    {
+      title: "10.000VND",
+      description: "",
+      subTitle: "",
+    },
+    {
+      title: "20.000VND",
+      description: "",
+    },
+  ];
+
   return (
     <div style={{ background: "#f5f5fa", width: "100%", height: "100vh" }}>
       <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
         <h3>Giỏ hàng</h3>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <WrapperLeft>
+            <WrapperStyleHeaderDelivery>
+              <StepComponent items={itemsDelivery} />
+            </WrapperStyleHeaderDelivery>
             <WrapperStyleHeader>
               <span style={{ display: "inline-block", width: "390px" }}>
                 <Checkbox
