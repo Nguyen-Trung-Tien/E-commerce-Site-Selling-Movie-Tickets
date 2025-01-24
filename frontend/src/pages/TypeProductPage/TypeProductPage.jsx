@@ -1,7 +1,7 @@
 import NavBarComponent from "../../component/NavBarComponent/NavBarComponent";
 import CardComponent from "../../component/CardComponent/CardComponent";
 import { Col, Pagination, Row } from "antd";
-import { WrapperNavbar, WrapperProducts } from "./style";
+import { WrapperNavbar, WrapperProducts } from "../TypeProductPage/style";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import * as ProductService from "../../services/ProductService";

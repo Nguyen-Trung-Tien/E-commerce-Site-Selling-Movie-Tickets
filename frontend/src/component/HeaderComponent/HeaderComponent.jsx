@@ -24,6 +24,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const user = useSelector((state) => state.user);
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
   const order = useSelector((state) => state.order);
   const [isPending, setIsPending] = useState(false);
   const [userAvatar, setUserAvatar] = useState("");
@@ -49,20 +50,34 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
   const content = (
     <div>
-      <WrapperContentPopup onClick={() => navigate("/profile-user")}>
+      <WrapperContentPopup onClick={() => handleClickNavigate("profile")}>
         Thông tin người dùng
       </WrapperContentPopup>
       {user?.isAdmin && (
-        <WrapperContentPopup onClick={() => navigate("/system/admin")}>
+        <WrapperContentPopup onClick={() => handleClickNavigate("admin")}>
           Quản lý hệ thống
         </WrapperContentPopup>
       )}
-      <WrapperContentPopup onClick={handleLogout}>
+      <WrapperContentPopup onClick={() => handleClickNavigate("my-order")}>
+        Đơn hàng của tôi
+      </WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate()}>
         Đăng xuất
       </WrapperContentPopup>
     </div>
   );
-
+  const handleClickNavigate = (type) => {
+    if (type === "profile") {
+      navigate("/profile-user");
+    } else if (type === "admin") {
+      navigate("/system/admin");
+    } else if (type === "my-order") {
+      navigate("/my-order");
+    } else {
+      handleLogout();
+    }
+    setIsOpenPopup(false);
+  };
   const onSearch = (e) => {
     setSearch(e.target.value);
     dispatch(searchProduct(e.target.value));
@@ -125,8 +140,11 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               )}
               {user?.access_token ? (
                 <>
-                  <Popover content={content} trigger="click">
-                    <div style={{ cursor: "pointer" }}>
+                  <Popover content={content} trigger="click" open={isOpenPopup}>
+                    <div
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setIsOpenPopup((prev) => !prev)}
+                    >
                       {userName?.length ? userName : user?.email}
                     </div>
                   </Popover>

@@ -4,6 +4,8 @@ export const orderConstant = {
     go_jek: "GO_JEK",
   },
   payment: {
-    later_money: "Thanh toán trước ",
+    later_money: "Thanh toán trước",
+    payple: "Paypal",
+    vnpay: "VNpay",
   },
 };
