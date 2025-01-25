@@ -16,7 +16,7 @@ import InputComponent from "../../component/InputComponent/InputComponent";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
-import * as PaymentService from "../../services/PaymentService";
+import * as PaymentService from "../../services/PaymentService ";
 import Loading from "../../component/LoadingComponent/Loading";
 import * as message from "../../component/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
@@ -30,6 +30,11 @@ const PaymentPage = () => {
   const [payment, setPayment] = useState();
   const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [orderInfo, setOrderInfo] = useState("");
+  const [isPending, setIsPending] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
@@ -229,6 +234,14 @@ const PaymentPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!window.vnpay) {
+      addVNpay();
+    } else {
+      setSdkReady(true);
+    }
+  }, []);
+
   const onSuccessPaypal = (details, data) => {
     mutationAddOrder.mutate(
       {
@@ -264,23 +277,76 @@ const PaymentPage = () => {
       }
     );
   };
+  const onSuccessVnpay = (details, data) => {
+    mutationAddOrder.mutate(
+      {
+        token: user?.access_token,
+        orderItems: order?.orderItemsSelected,
+        fullName: user?.name,
+        phone: user?.phone,
+        address: user?.address,
+        city: user?.city,
+        paymentMethod: payment,
+        itemsPrice: priceMemo,
+        shippingPrice: deliveryPriceMemo,
+        totalPrice: totalPriceMemo,
+        user: user?.id,
+        isPaid: true,
+        paidAt: details.update_time,
+      },
+      {
+        onSuccess: () => {
+          message.success("Payment successful");
+          navigate("/orderSuccess", {
+            state: {
+              delivery,
+              payment,
+              orders: order?.orderItemsSelected,
+              totalPrice: totalPriceMemo,
+            },
+          });
+        },
+        onError: () => {
+          message.error("Payment failed");
+        },
+      }
+    );
+  };
 
-  const handleVNPayPayment = async () => {
+  useEffect(() => {
+    // Lấy thông tin phản hồi từ URL
+    const queryParams = new URLSearchParams(window.location.search);
+    const vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
+    const vnp_TxnRef = queryParams.get("vnp_TxnRef");
+
+    // Kiểm tra mã phản hồi VNPay và hiển thị kết quả
+    if (vnp_ResponseCode === "00") {
+      setPaymentStatus("Payment successful!");
+    } else {
+      setPaymentStatus("Payment failed.");
+      setErrorMessage(
+        `Error Code: ${vnp_ResponseCode}, Transaction Reference: ${vnp_TxnRef}`
+      );
+    }
+  }, []);
+
+  const addVNpay = async () => {
+    const amount = totalPriceMemo;
+    const paymentData = {
+      amount: amount,
+      returnUrl: `${process.env.REACT_APP_API_URL}/vnpay_return`,
+      ipAddress: "127.0.0.1",
+    };
     try {
-      const response = await PaymentService.createPaymentUrl({
-        amount: totalPriceMemo,
-        bankCode: "",
-        orderDescription: "Payment for order",
-        orderType: "billpayment",
-        language: "vn",
-      });
-      if (response?.status === "OK") {
-        window.location.href = response.url;
+      const response = await PaymentService.vnpay(paymentData);
+      if (response.data.vnpUrl) {
+        window.location.href = response.data.vnpUrl;
       } else {
         message.error("Failed to create VNPay payment URL");
       }
     } catch (error) {
-      message.error("Error in VNPay payment");
+      console.error("Error processing payment", error);
+      message.error("Error processing payment");
     }
   };
 
@@ -409,9 +475,14 @@ const PaymentPage = () => {
                       }}
                     />
                   </div>
-                ) : payment === "vnpay" ? (
+                ) : payment === "vnpay" && sdkReady ? (
                   <ButtonComponent
-                    onClick={handleVNPayPayment}
+                    amount={totalPriceMemo / 30000}
+                    onSuccess={onSuccessPaypal}
+                    onError={() => {
+                      alert("Error in payment!");
+                    }}
+                    onClick={addVNpay}
                     size={40}
                     textButton={"Thanh toán VNPay"}
                     styleTextButton={{

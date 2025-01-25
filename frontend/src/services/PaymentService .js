@@ -7,10 +7,16 @@ export const getConfig = async () => {
   return res.data;
 };
 
-export const createPaymentUrl = async (paymentData) => {
-  const response = await axios.post(
-    "/api/payment/create_payment_url",
-    paymentData
+export const vnpay = async () => {
+  const res = await axios.post(
+    `${process.env.REACT_APP_API_URL}/payment/vnpay`
   );
-  return response.data;
+  return res.data;
+};
+
+export const vnpay_return = async () => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API_URL}/payment/vnpay_return`
+  );
+  return res.data;
 };
