@@ -453,7 +453,7 @@ const OrderPage = () => {
             wrapperCol={{ span: 20 }}
             // onFinish={onUpdateUser}
             autoComplete="on"
-            form={form}
+            form={form} // Add this line
           >
             <Form.Item
               label="Name"

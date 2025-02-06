@@ -207,10 +207,6 @@ const PaymentPage = () => {
     });
   };
 
-  const handleDelivery = (e) => {
-    setDelivery(e.target.value);
-  };
-
   const handlePayment = (e) => {
     setPayment(e.target.value);
   };
@@ -277,49 +273,12 @@ const PaymentPage = () => {
       }
     );
   };
-  const onSuccessVnpay = (details, data) => {
-    mutationAddOrder.mutate(
-      {
-        token: user?.access_token,
-        orderItems: order?.orderItemsSelected,
-        fullName: user?.name,
-        phone: user?.phone,
-        address: user?.address,
-        city: user?.city,
-        paymentMethod: payment,
-        itemsPrice: priceMemo,
-        shippingPrice: deliveryPriceMemo,
-        totalPrice: totalPriceMemo,
-        user: user?.id,
-        isPaid: true,
-        paidAt: details.update_time,
-      },
-      {
-        onSuccess: () => {
-          message.success("Payment successful");
-          navigate("/orderSuccess", {
-            state: {
-              delivery,
-              payment,
-              orders: order?.orderItemsSelected,
-              totalPrice: totalPriceMemo,
-            },
-          });
-        },
-        onError: () => {
-          message.error("Payment failed");
-        },
-      }
-    );
-  };
 
   useEffect(() => {
-    // Lấy thông tin phản hồi từ URL
     const queryParams = new URLSearchParams(window.location.search);
     const vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
     const vnp_TxnRef = queryParams.get("vnp_TxnRef");
 
-    // Kiểm tra mã phản hồi VNPay và hiển thị kết quả
     if (vnp_ResponseCode === "00") {
       setPaymentStatus("Payment successful!");
     } else {
@@ -345,7 +304,6 @@ const PaymentPage = () => {
         message.error("Failed to create VNPay payment URL");
       }
     } catch (error) {
-      console.error("Error processing payment", error);
       message.error("Error processing payment");
     }
   };
@@ -357,25 +315,6 @@ const PaymentPage = () => {
           <h3>Thanh toán</h3>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <WrapperLeft>
-              {/* <WrapperInfo>
-                <div>
-                  <label>Chọn phương thức giao </label>
-                  <WrapperRadio onChange={handleDelivery} value={delivery}>
-                    <Radio value="fast">
-                      <span style={{ color: "#ea8500", fontWeight: "bold" }}>
-                        FAST
-                      </span>
-                      Giao hàng tiết kiệm
-                    </Radio>
-                    <Radio value="go_jek">
-                      <span style={{ color: "#ea8500", fontWeight: "bold" }}>
-                        GO_JEK
-                      </span>
-                      Giao hàng nhanh
-                    </Radio>
-                  </WrapperRadio>
-                </div>
-              </WrapperInfo> */}
               <WrapperInfo>
                 <div>
                   <label>Chọn phương thanh toán</label>

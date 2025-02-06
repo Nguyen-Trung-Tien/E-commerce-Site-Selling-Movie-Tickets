@@ -516,7 +516,7 @@ const AdminProduct = () => {
             wrapperCol={{ span: 18 }}
             onFinish={onFinish}
             autoComplete="on"
-            form={form}
+            form={form} // Add this line
           >
             <Form.Item
               label="Name"
@@ -685,7 +685,7 @@ const AdminProduct = () => {
             wrapperCol={{ span: 22 }}
             onFinish={onUpdateProduct}
             autoComplete="on"
-            form={form}
+            form={form} // Add this line
           >
             <Form.Item
               label="Name"

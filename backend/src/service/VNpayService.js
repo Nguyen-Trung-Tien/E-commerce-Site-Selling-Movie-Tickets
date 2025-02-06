@@ -11,7 +11,7 @@ const createPaymentUrl = (amount, orderInfo, returnUrl, ipAddress) => {
     vnp_Version: "2.1.0",
     vnp_Command: "pay",
     vnp_TmnCode: MERCHANT_CODE,
-    vnp_Amount: amount * 100, // VNPay yêu cầu số tiền tính theo đồng
+    vnp_Amount: amount * 100,
     vnp_CurrCode: "VND",
     vnp_TxnRef: Date.now(),
     vnp_OrderInfo: orderInfo,
@@ -20,10 +20,9 @@ const createPaymentUrl = (amount, orderInfo, returnUrl, ipAddress) => {
     vnp_IpAddr: ipAddress,
   };
 
-  // Sắp xếp các tham số theo thứ tự từ điển và mã hóa
   const querystring = Object.keys(vnp_Params)
     .sort()
-    .map((key) => `${key}=${vnp_Params[key]}`)
+    .map((key) => `${key}=${encodeURIComponent(vnp_Params[key])}`)
     .join("&");
 
   const signData = SECRET_KEY + querystring;
@@ -42,7 +41,7 @@ const validateResponse = (vnp_Params) => {
     Object.keys(vnp_Params)
       .filter((key) => key !== "vnp_SecureHash")
       .sort()
-      .map((key) => `${key}=${vnp_Params[key]}`)
+      .map((key) => `${key}=${encodeURIComponent(vnp_Params[key])}`)
       .join("&");
 
   const generatedHash = crypto

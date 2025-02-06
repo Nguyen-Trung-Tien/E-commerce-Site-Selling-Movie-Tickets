@@ -381,7 +381,7 @@ const AdminUser = () => {
             wrapperCol={{ span: 22 }}
             onFinish={onUpdateUser}
             autoComplete="on"
-            form={form}
+            form={form} // Add this line
           >
             <Form.Item
               label="Name"
