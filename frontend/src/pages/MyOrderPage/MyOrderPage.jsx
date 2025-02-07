@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useState } from "react";
 import * as OderService from "../../services/OrderService";
-import Loading from "../../component/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 
 const MyOrderPage = () => {
