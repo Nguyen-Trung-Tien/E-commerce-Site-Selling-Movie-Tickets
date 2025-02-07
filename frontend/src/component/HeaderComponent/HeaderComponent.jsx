@@ -104,7 +104,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             onClick={() => navigate("/")}
             style={{ cursor: "pointer" }}
           >
-            GOOD-MOVIE
+            Immersive Cinema
           </WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
