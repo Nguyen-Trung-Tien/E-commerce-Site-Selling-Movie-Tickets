@@ -384,12 +384,7 @@ const PaymentPage = () => {
                   </div>
                 ) : payment === "vnpay" ? (
                   <ButtonComponent
-                    amount={totalPriceMemo / 30000}
-                    onSuccess={onSuccessPaypal}
-                    onError={() => {
-                      alert("Error in payment!");
-                    }}
-                    onClick={handleVNPayPayment}
+                    onClick={handleVNPayPayment} // Chỉ cần truyền `onClick`
                     size={40}
                     textButton={"Thanh toán VNPay"}
                     styleTextButton={{

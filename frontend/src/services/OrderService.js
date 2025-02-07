@@ -20,9 +20,8 @@ export const createOrder = async (data, access_token) => {
 
 export const getOrderByUserId = async (id, access_token) => {
   try {
-    const res = await axios.post(
+    const res = await axios.get(
       `${process.env.REACT_APP_API_URL}/order/get-order-details/${id}`,
-
       {
         headers: {
           token: `Bearer ${access_token}`,
@@ -30,8 +29,5 @@ export const getOrderByUserId = async (id, access_token) => {
       }
     );
     return res.data;
-  } catch (error) {
-    console.error("Failed to create order:", error);
-    throw error;
-  }
+  } catch (error) {}
 };

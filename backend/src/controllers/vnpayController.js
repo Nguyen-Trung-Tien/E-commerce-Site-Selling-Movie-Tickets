@@ -8,7 +8,7 @@ exports.createPaymentUrl = (req, res) => {
   const tmnCode = "VI5HB68A";
   const secretKey = "K0RTQXVLHK8KHSJJZY9S40GEESWQJKVK";
   const returnUrl = "http://localhost:3000/orderSuccess";
-  const vnpUrl = "https://sandbox.vnpayment.vn/paymentv2";
+  const vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 
   const date = new Date();
   const createDate = moment(date).format("YYYYMMDDHHmmss");
@@ -39,6 +39,12 @@ exports.createPaymentUrl = (req, res) => {
 
   vnp_Params["vnp_SecureHash"] = signed;
   const paymentUrl = `${vnpUrl}?${qs.stringify(vnp_Params)}`;
+
+  // Add Content-Security-Policy header
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; style-src 'self'; img-src 'self';"
+  );
 
   return res.json({ paymentUrl });
 };
