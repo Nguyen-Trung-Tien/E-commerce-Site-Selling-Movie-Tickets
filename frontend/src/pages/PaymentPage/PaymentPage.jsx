@@ -30,11 +30,7 @@ const PaymentPage = () => {
   const [payment, setPayment] = useState();
   const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [orderInfo, setOrderInfo] = useState("");
-  const [isPending, setIsPending] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
@@ -230,14 +226,6 @@ const PaymentPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!window.vnpay) {
-      addVNpay();
-    } else {
-      setSdkReady(true);
-    }
-  }, []);
-
   const onSuccessPaypal = (details, data) => {
     mutationAddOrder.mutate(
       {
@@ -273,41 +261,21 @@ const PaymentPage = () => {
       }
     );
   };
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
-    const vnp_TxnRef = queryParams.get("vnp_TxnRef");
-
-    if (vnp_ResponseCode === "00") {
-      setPaymentStatus("Payment successful!");
-    } else {
-      setPaymentStatus("Payment failed.");
-      setErrorMessage(
-        `Error Code: ${vnp_ResponseCode}, Transaction Reference: ${vnp_TxnRef}`
-      );
-    }
-  }, []);
-
-  const addVNpay = async () => {
-    const amount = totalPriceMemo;
-    const paymentData = {
-      amount: amount,
-      returnUrl: `${process.env.REACT_APP_API_URL}/vnpay_return`,
-      ipAddress: "127.0.0.1",
-    };
+  const handleVNPayPayment = async () => {
     try {
-      const response = await PaymentService.vnpay(paymentData);
-      if (response.data.vnpUrl) {
-        window.location.href = response.data.vnpUrl;
-      } else {
-        message.error("Failed to create VNPay payment URL");
+      const response = await PaymentService.createVNPayPayment({
+        orderId: new Date().getTime(),
+        amount: totalPriceMemo,
+        bankCode: "",
+      });
+
+      if (response.data.paymentUrl) {
+        window.location.href = response.data.paymentUrl;
       }
     } catch (error) {
-      message.error("Error processing payment");
+      message.error("Thanh toán VNPay thất bại!");
     }
   };
-
   return (
     <div style={{ background: "#f5f5fa", width: "100%", height: "100vh" }}>
       <Loading isPending={isPendingAddOrder}>
@@ -414,14 +382,14 @@ const PaymentPage = () => {
                       }}
                     />
                   </div>
-                ) : payment === "vnpay" && sdkReady ? (
+                ) : payment === "vnpay" ? (
                   <ButtonComponent
                     amount={totalPriceMemo / 30000}
                     onSuccess={onSuccessPaypal}
                     onError={() => {
                       alert("Error in payment!");
                     }}
-                    onClick={addVNpay}
+                    onClick={handleVNPayPayment}
                     size={40}
                     textButton={"Thanh toán VNPay"}
                     styleTextButton={{

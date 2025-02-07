@@ -10,11 +10,23 @@ import Loading from "../../component/LoadingComponent/Loading";
 import { useLocation } from "react-router-dom";
 import { convertPrice } from "../../utils";
 import { orderConstant } from "../../constant";
+import * as message from "../../component/Message/Message";
+import { useEffect } from "react";
 
 const OrderSuccess = () => {
   const order = useSelector((state) => state.order);
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
   const { state } = location;
+
+  useEffect(() => {
+    if (vnp_ResponseCode === "00") {
+      message.success("Thanh toán VNPay thành công!");
+    } else {
+      message.error("Thanh toán VNPay thất bại!");
+    }
+  }, [vnp_ResponseCode]);
   return (
     <div style={{ background: "#f5f5fa", width: "100%", height: "100vh" }}>
       <Loading isPending={false}>
