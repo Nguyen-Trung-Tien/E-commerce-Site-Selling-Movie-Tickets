@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const qs = require("qs");
 const moment = require("moment");
 
-exports.createPaymentUrl = (req, res) => {
+exports.createPaymentUrl = async (req, res) => {
   const { orderId, amount, bankCode } = req.body;
 
   const tmnCode = "VI5HB68A";
@@ -39,12 +39,9 @@ exports.createPaymentUrl = (req, res) => {
 
   vnp_Params["vnp_SecureHash"] = signed;
   const paymentUrl = `${vnpUrl}?${qs.stringify(vnp_Params)}`;
-
-  // Add Content-Security-Policy header
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; style-src 'self'; img-src 'self';"
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
   );
-
   return res.json({ paymentUrl });
 };

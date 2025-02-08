@@ -34,7 +34,7 @@ export const WrapperRadio = styled(Radio.Group)`
   border: 1px solid rgb(194, 255, 255);
   width: 500px;
   border-radius: 4px;
-  height: 100px;
+  height: 120px;
   padding: 16px;
   display: flex;
   font-weight: normal;

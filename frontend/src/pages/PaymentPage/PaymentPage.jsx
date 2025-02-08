@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { PayPalButton } from "react-paypal-button-v2";
 import { Form, Radio } from "antd";
+import moment from "moment";
 import {
   WrapperLeft,
   WrapperRight,
@@ -261,11 +262,12 @@ const PaymentPage = () => {
       }
     );
   };
+
   const handleVNPayPayment = async () => {
     try {
       const response = await PaymentService.createVNPayPayment({
-        orderId: new Date().getTime(),
-        amount: totalPriceMemo,
+        orderId: Math.floor(Date.now() / 1000),
+        amount: Math.round(totalPriceMemo * 100),
         bankCode: "",
       });
 
@@ -276,6 +278,26 @@ const PaymentPage = () => {
       message.error("Thanh toán VNPay thất bại!");
     }
   };
+
+  // const handleZaloPayPayment = async () => {
+  //   try {
+  //     const orderId =
+  //       moment().format("YYMMDDHHmmss") + Math.floor(Math.random() * 10000);
+  //     const response = await PaymentService.createZaloPayPayment({
+  //       orderId,
+  //       amount: totalPriceMemo,
+  //     });
+
+  //     if (response.data.order_url) {
+  //       window.location.href = response.data.order_url;
+  //     } else {
+  //       message.error("Không nhận được URL thanh toán từ ZaloPay");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi thanh toán ZaloPay:", error);
+  //     message.error("Thanh toán ZaloPay thất bại!");
+  //   }
+  // };
   return (
     <div style={{ background: "#f5f5fa", width: "100%", height: "100vh" }}>
       <Loading isPending={isPendingAddOrder}>
@@ -289,6 +311,7 @@ const PaymentPage = () => {
                   <WrapperRadio onChange={handlePayment} value={payment}>
                     <Radio value="later_money">Thanh toán sau </Radio>
                     <Radio value="paypal">Thanh toán bằng Paypal</Radio>
+                    <Radio value="zalopay">Thanh toán bằng ZaloPay</Radio>
                     <Radio value="vnpay">Thanh toán bằng VNpay</Radio>
                   </WrapperRadio>
                 </div>
@@ -395,6 +418,24 @@ const PaymentPage = () => {
                     styleButton={{
                       width: "320px",
                       background: "#f00",
+                      height: "48px",
+                      border: "none",
+                      borderRadius: "4px",
+                    }}
+                  />
+                ) : payment === "zalopay" ? (
+                  <ButtonComponent
+                    // onClick={handleZaloPayPayment}
+                    size={40}
+                    textButton={"Thanh toán ZaloPay"}
+                    styleTextButton={{
+                      color: "#fff",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                    styleButton={{
+                      width: "320px",
+                      background: "#ff8c00",
                       height: "48px",
                       border: "none",
                       borderRadius: "4px",

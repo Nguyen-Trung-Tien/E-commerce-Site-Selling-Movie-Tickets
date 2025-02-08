@@ -8,8 +8,15 @@ export const getConfig = async () => {
 };
 
 export const createVNPayPayment = async (data) => {
-  return axios.post(
+  return await axios.post(
     `${process.env.REACT_APP_API_URL}/payment/create_payment_url`,
     data
   );
 };
+
+// export const createZaloPayPayment = async (data) => {
+//   return await axios.post(
+//     `${process.env.REACT_APP_API_URL}/payment/zalopay`,
+//     data
+//   );
+// };
